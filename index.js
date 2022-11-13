@@ -8,6 +8,9 @@ import {name as appName} from './app.json';
 import RegisterUser from './src/components/RegisterUser';
 import Home from './src/components/Home'
 import Search from './src/components/Search'
+import ProductList from './src/components/ProductList'
+import Product from './src/components/Product'
+import Cart from './src/components/Cart'
 
 
-AppRegistry.registerComponent(appName, () => Search);
+AppRegistry.registerComponent(appName, () => Home);
