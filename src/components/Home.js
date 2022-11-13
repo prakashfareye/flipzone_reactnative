@@ -1,11 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+
 
 const Home = ({navigation}) => {
   return (
     <View>
-      <TouchableOpacity>
+      <TouchableOpacity >
       <Text  >Home</Text>
+      <Footer/>
       </TouchableOpacity>
     </View>
   )

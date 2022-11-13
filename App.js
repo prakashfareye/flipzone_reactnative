@@ -6,26 +6,23 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React,{useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import Home from "./src/components/Home";
-import Product from "./src/components/Product";
+import Retailers from "./src/components/Retailers";
+import Listing from "./src/components/Listing";
+import Categories from "./src/components/Categories";
+import ProductInfo from "./src/components/ProductInfo";
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
@@ -33,39 +30,42 @@ const Stack = createNativeStackNavigator();
 
 const App=() => {
   
+  // useEffect(()=>{
+    
+  // })
   return (
-
+    
       <NavigationContainer>
       <Stack.Navigator
-         initialRouteName="Product"
+         initialRouteName="Retailers"
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
+          contentStyle:{
+            backgroundColor:'#DADADA',
+          },
+          headerRight:()=>(<View><TouchableOpacity
+            onPress={() => {
+              alert("Successfully logged out");
+            }}>
+            <Text
+              style={{color: 'blue',textDecorationLine:'underline'}}>
+              Logout
+            </Text>
+          </TouchableOpacity></View>)
         }}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Product" component={Product} />
-        
+        <Stack.Screen name="Retailers" component={Retailers}  options={{ title: 'Flipkart Seller',headerTitleAlign:'center'}}/>
+       <Stack.Screen name="Listing" component={Listing} />
+        <Stack.Screen name="Categories" component={Categories} />
+       <Stack.Screen name="ProductInfo" component={ProductInfo} options={{ title: 'Add New Product' }}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
+  
   );
 };
 
 const styles = StyleSheet.create({
-  // sectionContainer: {
-  //   marginTop: 32,
-  //   paddingHorizontal: 24,
-  // },
-  // sectionTitle: {
-  //   fontSize: 24,
-  //   fontWeight: '600',
-  // },
-  // sectionDescription: {
-  //   marginTop: 8,
-  //   fontSize: 18,
-  //   fontWeight: '400',
-  // },
-  // highlight: {
-  //   fontWeight: '700',
-  // },
+  
 });
 
 export default App;
