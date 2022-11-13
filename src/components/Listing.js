@@ -4,7 +4,6 @@ import {
   View,
   TouchableHighlight,
   FlatList,
-  ScrollView,
 } from 'react-native';
 import React from 'react';
 const data = [
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: 'bold',
     alignSelf: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: '#2874F0',
     borderBottomEndRadius: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,

@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   Image,
   SafeAreaView,
-  FlatList
+  FlatList,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 const data = [
   {id: '1', name: 'dairymilk', description: 'good one', price: '10'},
@@ -15,15 +15,24 @@ const data = [
   {id: '3', name: 'dairymilk', description: 'good one', price: '10'},
   {id: '6', name: 'dairymilk', description: 'good one', price: '10'},
   {id: '4', name: 'dairymilk', description: 'good one', price: '10'},
-  {id: '5', name: 'dairymilk', description: 'good one', price: '10'},]
+  {id: '5', name: 'dairymilk', description: 'good one', price: '10'},
+];
 
 const Retailers = ({route, navigation}) => {
-  const user = {name:'Balaji',phone:'1234567890',email:'balaji@gmail.com',address:'London'};
+  const user = [
+    {
+      name: 'Balaji',
+      phone: '1234567890',
+      email: 'balaji@gmail.com',
+      address: 'London',
+    },
+  ];
+
   return (
     <SafeAreaView>
       <View style={styles.page}>
         <Text style={{color: 'black', fontSize: 25, fontWeight: 'bold'}}>
-          Hello  {user.name}
+          Hello {user.name}
           {/* {route.params.name} */}
         </Text>
         <TouchableOpacity
@@ -42,7 +51,6 @@ const Retailers = ({route, navigation}) => {
         style={{
           marginTop: 20,
           alignSelf: 'center',
-          
         }}>
         <Text style={[styles.section]}>Mobile & Email</Text>
 
@@ -84,7 +92,7 @@ const Retailers = ({route, navigation}) => {
             <View
               style={[
                 styles.sectionView,
-                {height: 60, backgroundColor: '#DADADA',},
+                {height: 60, backgroundColor: 'white'},
               ]}>
               <Text style={{color: 'black'}}>
                 {item.name}
@@ -111,10 +119,8 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     width: 120,
     height: 30,
-    backgroundColor: 'blue',
+    backgroundColor: '#2874F0',
     borderWidth: 2,
-    borderRadius: 60,
-    
     marginRight: 20,
   },
   section: {
@@ -122,21 +128,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     alignSelf: 'center',
+    marginTop: 5,
   },
   image: {
     maxHeight: 30,
     maxWidth: 30,
     alignSelf: 'center',
-   
   },
   sectionView: {
     borderRadius: 10,
     marginTop: 40,
-    backgroundColor: 'white',
+    backgroundColor: '#2874F0',
     paddingHorizontal: 20,
     marginLeft: 10,
     marginRight: 20,
-   justifyContent:'center'
+    justifyContent: 'center',
   },
 });
 
