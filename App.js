@@ -6,21 +6,11 @@
  * @flow strict-local
  */
 
-import React, {useEffect} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import Retailers from './src/components/Retailers';
 import Listing from './src/components/Listing';
-import Categories from './src/components/Categories';
 import ProductInfo from './src/components/ProductInfo';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -84,16 +74,6 @@ const App = () => {
                 </TouchableOpacity>
               </View>
             ),
-          }}
-        />
-        <Stack.Screen
-          name="Categories"
-          component={Categories}
-          options={{
-            headerSearchBarOptions: {
-              placeholder: 'Search for category',
-              // onChangeText:(input)=>{useNavigation.dispatch(StackActions.replace('ProductInfo'));}
-            },
           }}
         />
         <Stack.Screen

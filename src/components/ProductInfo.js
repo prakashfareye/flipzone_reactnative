@@ -8,8 +8,10 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const data = {
   name: 'Dairymilk',
   description: 'good one',
@@ -17,21 +19,33 @@ const data = {
   url: 'https://pngimage.net/wp-content/uploads/2018/05/beach-png-background-2.png',
 };
 const ProductInfo = ({route, navigation}) => {
-  const [edit1, setEdit1] = useState(true);
-  const [edit2, setEdit2] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState();
-  const [url, setUrl] = useState();
-  const edithandler1 = () => {
-    setEdit1(!edit1);
-  };
+  const [edit, setEdit] = useState(false);
+  const [productName, setProductName] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [productPrice, setProductPrice] = useState();
+  const [categoryId, setCategoryId] = useState();
+  let userId = 1;
+  const [productImageURL, setProductImageURL] = useState('');
+  const [productQuantity, setProductQuantity] = useState();
+  //   const [retailerinput,setRetailerInput]=useState({categoryId: ,productName:'',productDescription:'',productPrice: ,productImageURL:"",productQuantity:,userId:,})
+  //   const changeHandler = e => {
+  //     setRetailerInput( prevValues => {
+  //     return { ...prevValues,[e.target.name]: e.target.value}
+  //  })};
+
   const edithandler2 = () => {
-    setEdit2(!edit2);
+    setEdit(!edit);
   };
-  const saveHandler = () => {
-    setEdit1(true);
-    setEdit2(false);
+  const saveHandler = async () => {
+    setEdit(false);
+    try {
+      let user = await AsyncStorage.getItem('user');
+      let parsed = JSON.parse(user);
+      userId = parsed.id;
+      alert(userId);
+    } catch (error) {
+      alert(error);
+    }
   };
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={-500}>
@@ -43,53 +57,6 @@ const ProductInfo = ({route, navigation}) => {
             </Text>
           </View>
 
-          <View style={[styles.sectionView, {height: 190}]}>
-            <TouchableOpacity>
-              <Text
-                style={{color: 'blue', fontSize: 19, textAlign: 'right'}}
-                onPress={edithandler1}>
-                Edit
-              </Text>
-            </TouchableOpacity>
-
-            {edit1 ? (
-              <View>
-                <Image
-                  style={{alignSelf: 'center', height: 130, width: 130}}
-                  // source={require('../../assets/home.png')}
-                  source={{uri: data.url}}
-                  //  source={{uri:url}}
-                />
-              </View>
-            ) : (
-              <View style={[styles.textInput, {flexDirection: 'column'}]}>
-                <TouchableOpacity
-                  onPress={input => {
-                    setEdit1(true);
-                    setUrl(input);
-                  }}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder={!edit1 ? 'enter url in string format' : ''}
-                    value={url}
-                    editable={!edit1}
-                    onChangeText={input => {
-                      // setUrl(input);
-                      setUrl(data.url);
-                    }}
-                  />
-                </TouchableOpacity>
-                <View style={styles.textInput}>
-                  <Image
-                    style={styles.image}
-                    source={require('../../assets/photo.png')}
-                  />
-
-                  <Text>Upload photo</Text>
-                </View>
-              </View>
-            )}
-          </View>
           <View style={styles.sectionView}>
             <View
               style={{
@@ -117,15 +84,28 @@ const ProductInfo = ({route, navigation}) => {
                 justifyContent: 'space-between',
               }}>
               <View style={styles.textInput}>
-                <Text style={styles.text}>Name:</Text>
+                <Text style={styles.text}>Category id:</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder={edit2 ? 'enter name' : ''}
-                  value={name}
-                  editable={edit2}
+                  placeholder={edit ? 'enter categoryid' : ''}
+                  value={categoryId}
+                  editable={edit}
                   onChangeText={input => {
-                    // setName(input);
-                    setName(data.name);
+                    setCategoryId(input);
+                    // setProductName(data.name);
+                  }}
+                />
+              </View>
+              <View style={styles.textInput}>
+                <Text style={styles.text}>Product Name:</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder={edit ? 'enter productName' : ''}
+                  value={productName}
+                  editable={edit}
+                  onChangeText={input => {
+                    setProductName(input);
+                    // setProductName(data.name);
                   }}
                 />
               </View>
@@ -133,15 +113,15 @@ const ProductInfo = ({route, navigation}) => {
                 <Text style={styles.text}>Description:</Text>
 
                 <TextInput
-                  style={styles.input}
-                  placeholder={edit2 ? 'enter description' : ''}
-                  value={description}
-                  editable={edit2}
+                  style={[styles.input, {width: 200}]}
+                  placeholder={edit ? 'enter productDescription' : ''}
+                  value={productDescription}
+                  editable={edit}
                   onChangeText={input => {
-                    // setDescription(input);
-                    setDescription(data.description);
+                    setProductDescription(input);
+                    // setProductDescription(data.description);
                   }}
-                  // multiline
+                  multiline
                 />
               </View>
               <View style={styles.textInput}>
@@ -149,20 +129,51 @@ const ProductInfo = ({route, navigation}) => {
 
                 <TextInput
                   style={styles.input}
-                  placeholder={edit2 ? 'enter price' : ''}
+                  placeholder={edit ? 'enter productPrice' : ''}
                   keyboardType="numbers-and-punctuation"
-                  value={price}
-                  editable={edit2}
+                  value={productPrice}
+                  editable={edit}
                   onChangeText={input => {
-                    // setPrice(input);
-                    setPrice(data.price);
+                    setProductPrice(input);
+                    // setProductPrice(data.price);
+                  }}
+                />
+              </View>
+
+              <View style={styles.textInput}>
+                <Text style={styles.text}>Product URL:</Text>
+                <TextInput
+                  style={[styles.input, {height: 60, width: 200}]}
+                  placeholder={
+                    edit ? 'enter productimage url in string format' : ''
+                  }
+                  value={productImageURL}
+                  editable={edit}
+                  onChangeText={input => {
+                    setProductImageURL(input);
+                    // setProductName(data.name);
+                  }}
+                  multiline
+                />
+              </View>
+              <View style={styles.textInput}>
+                <Text style={styles.text}>Quantity:</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder={edit ? 'enter quantity' : ''}
+                  value={productQuantity}
+                  editable={edit}
+                  keyboardType="numbers-and-punctuation"
+                  onChangeText={input => {
+                    setProductQuantity(input);
+                    // setProductName(data.name);
                   }}
                 />
               </View>
             </View>
           </View>
           <TouchableOpacity
-            disabled={edit1 && !edit2 ? false : true}
+            disabled={edit ? false : true}
             onPress={saveHandler}>
             <Text style={styles.button}>Save</Text>
           </TouchableOpacity>
@@ -201,8 +212,8 @@ const styles = StyleSheet.create({
   },
   input: {
     margin: 15,
-    height: 40,
-    width: 150,
+    height: 60,
+    width: 200,
     borderColor: '#DADADA',
     borderWidth: 1,
     color: 'black',
@@ -219,7 +230,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginLeft: 20,
     marginRight: 20,
-    height: 300,
+    height: 520,
     alignContent: 'center',
   },
   image: {

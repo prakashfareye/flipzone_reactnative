@@ -4,59 +4,94 @@ import {
   View,
   TouchableHighlight,
   FlatList,
+  TouchableOpacity,
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import {TextInput} from 'react-native-gesture-handler';
+
 const data = [
   {id: '1', name: 'dairymilk', description: 'good one', price: '10'},
   {id: '2', name: 'dairymilk', description: 'good one', price: '10'},
   {id: '3', name: 'dairymilk', description: 'good one', price: '10'},
-  {id: '6', name: 'dairymilk', description: 'good one', price: '10'},
+  {id: '6', name: 'kitkat', description: 'good one', price: '10'},
   {id: '4', name: 'dairymilk', description: 'good one', price: '10'},
   {id: '5', name: 'dairymilk', description: 'good one', price: '10'},
 ];
 const Listing = ({route, navigation}) => {
-  return (
-    <View style={styles.sectionView}>
-      <View>
-        <Text
-          style={{
-            color: 'black',
-            fontWeight: 'bold',
-            fontSize: 20,
-            alignSelf: 'center',
-          }}>
-          My Listing
-        </Text>
+  const [list, setList] = useState(data);
+  const [filterby, setFilterBy] = useState();
 
-        <FlatList
-          data={data}
-          renderItem={({item}) => (
-            <View
-              style={[
-                styles.sectionView,
-                {height: 60, backgroundColor: '#DADADA'},
-              ]}>
-              <Text style={{color: 'black'}}>
-                {item.name}
-                <Text> {item.price}</Text>
-              </Text>
-            </View>
-          )}
-          keyExtractor={item => item.id}
-        />
-      </View>
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
-        <TouchableHighlight style={styles.button}>
-          <Text
-            style={{color: 'white', textAlign: 'center'}}
-            onPress={() => {
-              navigation.navigate('Categories');
-            }}>
-            Add New Product
-          </Text>
-        </TouchableHighlight>
+        <View style={styles.sectionView}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  setList(data);
+                }}>
+                <Text style={[styles.text, {fontWeight: 'bold', fontSize: 20}]}>
+                  My Listing
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.textInput}>
+              <TextInput
+                style={[styles.input, {marginTop: 0}]}
+                placeholder={'Search by product name'}
+                value={filterby}
+                onChangeText={input => {
+                  setFilterBy(input);
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setList(data.filter(data => data.name == filterby));
+                  setFilterBy('');
+                }}>
+                <Image
+                  style={styles.image}
+                  source={require('../../assets/filter.png')}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <FlatList
+            style={{marginTop: -150}}
+            data={list}
+            renderItem={({item}) => (
+              <View
+                style={[
+                  styles.sectionView,
+                  {height: 60, backgroundColor: '#DADADA'},
+                ]}>
+                <Text style={{color: 'black'}}>
+                  {item.name}
+                  <Text> {item.price}</Text>
+                </Text>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+          />
+        </View>
+        <View>
+          <TouchableHighlight style={styles.button}>
+            <Text
+              style={{color: 'white', textAlign: 'center'}}
+              onPress={() => {
+                navigation.navigate('ProductInfo');
+              }}>
+              Add New Product
+            </Text>
+          </TouchableHighlight>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -77,6 +112,17 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 10,
     borderTopLeftRadius: 10,
   },
+  input: {
+    margin: 15,
+    height: 40,
+    width: 160,
+    borderColor: '#DADADA',
+    borderWidth: 1,
+    color: 'black',
+  },
+  textInput: {
+    flexDirection: 'row',
+  },
   sectionView: {
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 2},
@@ -92,6 +138,11 @@ const styles = StyleSheet.create({
     height: 500,
     alignContent: 'center',
     justifyContent: 'space-between',
+  },
+  image: {
+    maxHeight: 30,
+    maxWidth: 30,
+    alignSelf: 'center',
   },
 });
 export default Listing;
