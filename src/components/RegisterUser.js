@@ -22,8 +22,10 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {RadioButton} from 'react-native-paper';
 
 import {ProjectColors} from './colors/ProjectColors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterUser = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -40,6 +42,7 @@ const RegisterUser = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailValidError, setEmailValidError] = useState('');
+  const [checked, setChecked] = React.useState('ROLE_USER');
 
   const validateEmailRunTime = text => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -53,19 +56,71 @@ const RegisterUser = () => {
   };
 
   const handleSignUpLoginButtonClick = () => {
-    //signUpUser();
-    //loginUser();
-    //notifyMessage(`${email} ${password}`);
     if (signInMode) {
       //sign up
-      //signUpUser();
+      signUpUser();
     } else {
       // login
       if (emailValidError === '' && password.length >= 8) {
         // verify user
-        //loginUser();
+        loginUser();
       }
     }
+  };
+
+  const saveUserToAsyncStorage = user => {
+    AsyncStorage.setItem('user', JSON.stringify(user))
+      .then(json => console.log('User Detail Saving success!'))
+      .catch(error => console.log('User Detail Saving error!'));
+  };
+
+  const loginUser = () => {
+    console.log(email, password);
+    fetch('http://10.0.2.2:8085/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `username=${email}&password=${password}`,
+    })
+      .then(response => response.json())
+      .then(res => {
+        console.log(res);
+        saveUserToAsyncStorage(res);
+      })
+      .catch(error => console.log('fetchToken error: ', error));
+  };
+
+  const signUpUser = () => {
+    console.log(
+      'Inside signup',
+      JSON.stringify({
+        userName: name,
+        userEmailId: email,
+        password: password,
+        role: checked,
+      }),
+    );
+
+    fetch('http://10.0.2.2:8085/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userName: name,
+        userEmailId: email,
+        password: password,
+        role: checked,
+      }),
+    })
+      .then(response => response.json())
+      .then(res => {
+        console.log(res);
+        saveUserToAsyncStorage(res);
+      })
+      .catch(error => console.log('fetchToken error: ', error));
   };
 
   return (
@@ -90,7 +145,7 @@ const RegisterUser = () => {
                 placeholder="Enter Your Name"
                 placeholderTextColor={ProjectColors.grey}
                 onChangeText={text => {
-                  //validateEmailRunTime(text);
+                  setName(text);
                 }}
               />
             )}
@@ -100,7 +155,7 @@ const RegisterUser = () => {
               placeholder="Your Email id"
               placeholderTextColor={ProjectColors.grey}
               onChangeText={text => {
-                //validateEmailRunTime(text);
+                validateEmailRunTime(text);
               }}
             />
             <View style={styles.passwordView}>
@@ -111,7 +166,7 @@ const RegisterUser = () => {
                 placeholderTextColor={ProjectColors.grey}
                 style={styles.textInputPassword}
                 onChangeText={text => {
-                  //setPassword(text);
+                  setPassword(text);
                 }}
               />
               <TouchableOpacity
@@ -153,10 +208,33 @@ const RegisterUser = () => {
                 </TouchableOpacity>
               </View>
             )}
+            {signInMode && (
+              <View style={styles.radioContainer}>
+                <View style={styles.buttonRow}>
+                  <RadioButton
+                    value="User"
+                    status={checked === 'ROLE_USER' ? 'checked' : 'unchecked'}
+                    onPress={() => setChecked('ROLE_USER')}
+                  />
+                  <Text>User</Text>
+                </View>
+                <View style={styles.buttonRow}>
+                  <RadioButton
+                    style={styles.radioButtonItem}
+                    value="Retailer"
+                    status={
+                      checked === 'ROLE_RETAILER' ? 'checked' : 'unchecked'
+                    }
+                    onPress={() => setChecked('ROLE_RETAILER')}
+                  />
+                  <Text>Retailer</Text>
+                </View>
+              </View>
+            )}
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => {
-                //handleSignUpLoginButtonClick();
+                handleSignUpLoginButtonClick();
               }}>
               <Text style={styles.buttonText}>
                 {signInMode ? 'Sign-Up' : 'Log-In'}
@@ -209,7 +287,7 @@ const styles = StyleSheet.create({
   },
   cardSignUp: {
     width: 350,
-    height: 510,
+    height: 610,
     elevation: 3,
     marginBottom: 10,
     marginLeft: 20,
@@ -299,5 +377,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: ProjectColors.navy,
     fontWeight: 'bold',
+  },
+  radioContainer: {
+    display: 'flex',
+    direction: 'row',
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  radioButtonItem: {
+    width: 100,
+  },
+  buttonRow: {
+    display: 'flex',
+    direction: 'row',
   },
 });
