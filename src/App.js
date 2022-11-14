@@ -24,26 +24,22 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import Home from "./src/components/Home";
-import Product from "./src/components/Product";
+import Home from './components/Home';
+import Product from './components/Product';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-
-const App=() => {
-  
+const App = () => {
   return (
-
-      <NavigationContainer>
+    <NavigationContainer>
       <Stack.Navigator
-         initialRouteName="Product"
+        initialRouteName="Product"
         screenOptions={{
           headerShown: false,
         }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Product" component={Product} />
-        
       </Stack.Navigator>
     </NavigationContainer>
   );
