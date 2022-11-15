@@ -21,15 +21,12 @@ import {ProjectColors} from './colors/ProjectColors';
 
 import Footer from './Footer';
 
-const Cart = ({ navigation, route }) => {
+const Summary = ({ navigation, route }) => {
 
     useEffect(() => {
-        initialTotalPrice = 0
-        initialTotalItems = 0
-        cartItems.forEach((element) => {
-            initialTotalPrice += element.count*element.price
-            initialTotalItems += element.count
-        });
+        initialTotalPrice = productItem[0].productPrice*productItem[0].productItemCount
+        initialTotalItems = productItem[0].productItemCount
+
 
         setTotalPrice(initialTotalPrice)
         setTotalItems(initialTotalItems)
@@ -38,111 +35,86 @@ const Cart = ({ navigation, route }) => {
 
     const [totalPrice, setTotalPrice] = useState(0)
     const [totalItems, setTotalItems] = useState(8)
-    const [cartItems, setcartItems] = useState(
+    const [productItem, setProductItem] = useState(
         [
             {
-                "id": 1,
-                "name": "shoes",
-                "retailer": "retailer",
-                "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-                "price": 10000,
-                "count": 2
+                "productId": 1,
+                "productName": "shoes",
+                "brand": "brand",
+                "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
+                "productPrice": 30000,
+                "productDescription": "key feature 1,key feature 2222222,key feature 353434353",
+                "productItemCount": 1
             },
-            {
-                "id": 2,
-                "name": "shoes",
-                "retailer": "retailer",
-                "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-                "price": 10000,
-                "count": 2
-            },
-            {
-                "id": 3,
-                "name": "shoes",
-                "retailer": "retailer",
-                "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-                "price": 10000,
-                "count": 2
-            },
-            {
-                "id": 4,
-                "name": "shoes",
-                "retailer": "retailer",
-                "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-                "price": 10000,
-                "count": 2
-            }
         ]
     )
 
-    minusClick = (index) => {
-        if(cartItems[index].count == 1) {
-            removeCartItem(index)
+    minusClick = () => {
+        
+        if(productItem[0].productItemCount == 1) {
+            setProductItem([])
+            setTotalItems(0)
+            setTotalPrice(0)
         } else {
-            cartItems[index].count -= 1
-            updatedCartItems = [...cartItems]
-            console.log(updatedCartItems)
-            updatedTotalPrice = totalPrice - cartItems[index].price
-            updatedTotalItems = totalItems - 1
-            setcartItems(updatedCartItems)
-            setTotalPrice(updatedTotalPrice)
-            setTotalItems(updatedTotalItems)
+            updateProductItem = [...productItem]
+            updateProductItem[0].productItemCount -= 1
+            updatedtotalPrice = updateProductItem[0].productItemCount*updateProductItem[0].productPrice
+            updatedtotalItems = updateProductItem[0].productItemCount - 1
+            setProductItem(updateProductItem)
+            setTotalItems(updateProductItem)
+            setTotalPrice(updatedtotalPrice)
         }
 
     }
 
-    plusClick = (index) => {
-        cartItems[index].count += 1
-        updatedCartItems = [...cartItems]
-        updatedTotalPrice = totalPrice + cartItems[index].price
-        updatedTotalItems = totalItems + 1
-        setcartItems(updatedCartItems)
-        setTotalPrice(updatedTotalPrice)
-        setTotalItems(updatedTotalItems)
+    plusClick = () => {
+        updateProductItem = [...productItem]
+        updateProductItem[0].productItemCount += 1
+        updatedtotalPrice = updateProductItem[0].productItemCount*updateProductItem[0].productPrice
+        updatedtotalItems = updateProductItem[0].productItemCount + 1
+        setProductItem(updateProductItem)
+        setTotalItems(updatedtotalItems)
+        setTotalPrice(updatedtotalPrice)
     }
 
-    removeCartItem = (index) => {
-        console.log(index)
-        updatedTotalPrice = totalPrice - cartItems[index].price*cartItems[index].count
-        updatedTotalItems = totalItems - cartItems[index].count
-        updatedCartItems = cartItems.slice(0, index).concat(cartItems.slice(index+1))
-        console.log(updatedCartItems)
-        setcartItems(updatedCartItems)
-        setTotalPrice(updatedTotalPrice)
-        setTotalItems(updatedTotalItems)
+    removeCartItem = () => {
+        setProductItem([])
+        setTotalPrice(0)
+        setTotalItems(0)
 
     }
 
     const routeBack = () => {
         navigation.goBack()
+
     }
 
-    const keyExtractor = (item) => item.id;
+    const keyExtractor = (item) => item.productId;
 
-    const renderItem = ({ item, index }) => (
+    const renderItem = ({ item, index}) => (
         <View>
         <TouchableOpacity delayPressIn={75} style={{height: 300, width: 375, backgroundColor: ProjectColors.white, marginBottom: 10}}>
             <View style={{width: 150, height: 150, position: "absolute", top: 5, left: 5, borderWidth: 0.5}}>
-                <Image style={{width: 150, height: 150}} source={{uri: item.imageUrl}}></Image>
+                <Image style={{width: 150, height: 150}} source={{uri: item.productImageURL}}></Image>
             </View>
             <View style={{width: 200, position: "absolute", top: 5, right: 10, flexDirection: "column"}}>
-                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 20, fontWeight: "500"}}>{item.name}</Text>
-                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>seller: <Text style={{textTransform: 'lowercase'}}>{item.retailer}</Text></Text>
-                <Text style={{color: "black", fontSize: 25, alignSelf: "center", fontWeight: "800", paddingTop: 10}}>$ <Text>{item.price}</Text></Text>
+                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 20, fontWeight: "500"}}>{item.productName}</Text>
+                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>Brand: <Text style={{textTransform: 'lowercase'}}>{item.brand}</Text></Text>
+                <Text style={{color: "black", fontSize: 25, alignSelf: "center", fontWeight: "800", paddingTop: 10}}>$ <Text>{item.productPrice}</Text></Text>
             </View>
             <View style={{position: "absolute", bottom: 20, left: 20, flexDirection: "row", borderWidth: 1}}>
-                <TouchableOpacity onPress={() => minusClick(index)} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
+                <TouchableOpacity onPress={() => minusClick()} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
                         <Text style={{alignSelf: "center"}}>-</Text>
                 </TouchableOpacity>
-                <Text style={{height: 40, width: 40, fontWeight: "800", color: ProjectColors.black, textAlignVertical: 'center', textAlign: "center", borderWidth: 1}}>{item.count}</Text>
-                <TouchableOpacity onPress={() => plusClick(index)} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
+                <Text style={{height: 40, width: 40, fontWeight: "800", color: ProjectColors.black, textAlignVertical: 'center', textAlign: "center", borderWidth: 1}}>{item.productItemCount}</Text>
+                <TouchableOpacity onPress={() => plusClick()} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
                         <Text style={{alignSelf: "center"}}>+</Text>
                 </TouchableOpacity>
             </View>
-            <Text onPress={() => removeCartItem(index)} style={{position: "absolute", bottom: 30, left: 165, color: ProjectColors.navy, fontWeight: "500", fontSize: 15}}>Remove</Text>
+            <Text onPress={() => removeCartItem()} style={{position: "absolute", bottom: 30, left: 165, color: ProjectColors.navy, fontWeight: "500", fontSize: 15}}>Remove</Text>
         </TouchableOpacity>
         {
-            (index==cartItems.length-1) && 
+            (index==productItem.length-1) && 
             <View style={{height: 200, backgroundColor: "white"}}>
                 <Text style={{color: "black", fontSize: 15, fontWeight: "700", marginBottom: 5}}>Price Details</Text>
                 <Text style={{color: "black", fontSize: 15, position: "absolute", top: 50, left: 10}}>price ({totalItems} items)</Text>
@@ -172,12 +144,12 @@ const Cart = ({ navigation, route }) => {
                         <Image styles={styles.searchIcon} source={require('../assets/icons8-left-24.png')}></Image>
                     </View>
                 </TouchableOpacity>
-                <Text style={{alignSelf: "center", color: ProjectColors.black, fontWeight: "500", paddingLeft: 30}}>My Cart</Text>
+                <Text style={{alignSelf: "center", color: ProjectColors.black, fontWeight: "500", paddingLeft: 30}}>Summary</Text>
             </View>
             <FlatList
-                    data={cartItems}
+                    data={productItem}
                     renderItem={renderItem}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.productId}
                     style={styles.container}
             />
             <View style={{flexDirection: "row", justifyContent: "space-evenly", height: 75, elevation: 3, backgroundColor: ProjectColors.white, borderTopWidth: 0.5, borderBottomWidth: 0.25}}>
@@ -224,4 +196,4 @@ const styles = StyleSheet.create({
       },
 })
 
-export default Cart;
+export default Summary;

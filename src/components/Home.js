@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, componentDidMount} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,9 +18,26 @@ import {
 
 import {ProjectColors} from './colors/ProjectColors';
 
-import SliderBox from "react-native-image-slider-box";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = (props) => {
+import Footer from './Footer';
+
+const Home = ({ navigation, route }) => {
+
+    
+
+    useEffect(() => {
+        console.log("home")
+        fetch('http://10.0.2.2:8085/category', {
+            method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                setProductCategories(data)
+            })
+            .catch(error => console.log('get all categories api fail ', error));
+
+      }, [])
 
     const [topProducts, setTopProducts] = useState([
         {
@@ -42,81 +59,107 @@ const Home = (props) => {
 
     const [productCategories, setProductCategories] = useState([
         {
-            "id": 1,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
+            "productCategoryId": 1,
+            "productCategoryName": "shoes",
+            "productCategoryImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
         },
         {
-            "id": 2,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
+            "productCategoryId": 2,
+            "productCategoryName": "shoes111",
+            "productCategoryImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
         },
-        {
-            "id": 3,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        },
-        {
-            "id": 4,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        },
-        {
-            "id": 5,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        },
-        {
-            "id": 6,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        },
-        {
-            "id": 7,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        }
     ])
 
-    const keyExtractor = (item) => item.id;
+    const searchBarPress = () => {
+        AsyncStorage.setItem('searchText', "")
+        .then(() => navigation.navigate("Search"))
+        .catch(error => console.log("searchBarPress AsyncStorage error"));
+        }
+    
+    const productCategoryPress = (index) => {
+        AsyncStorage.removeItem("similarProducts")
+        AsyncStorage.setItem('ProductsByCategory', JSON.stringify({ "productCategoryId": productCategories[index].productCategoryId, "productCategoryName": productCategories[index].productCategoryName}))
+        .then(() => navigation.navigate("ProductList"))
+        .catch(error => console.log("productCategoryPress AsyncStorage error"));
+    }
 
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={{height: 250, width: 185, flexDirection: "column", justifyContent: "space-evenly", marginHorizontal: 4, marginVertical: 6, backgroundColor: ProjectColors.white, elevation: 3}}>
-            <View style={{width: 170, height: 170, alignSelf: "center"}}>
-                <Image style={{width: 170, height: 170}} source={{uri: item.imageUrl}}></Image>
-            </View>
-        
-            <Text style={{alignSelf: "center", color: "black", fontFamily: "bold"}}>{item.name}</Text>
-        </TouchableOpacity>
-    )
+    const topProductPress = (index) => {
+        console.log("top product category pressed " + index)
+    }
 
     return (
 
     
     <SafeAreaView style={{flex: 1, backgroundColor: ProjectColors.mint}}>    
         <View style={styles.defaultStyle}>
-            <TouchableOpacity style={styles.searchBar}>
+            <TouchableOpacity onPress={searchBarPress} style={styles.searchBar}>
                 <View style={{position: "absolute", bottom: 6, right: 315 }}>
-                    <Image styles={styles.searchIcon} source={require('../assets/open.png')}></Image>
+                    <Image styles={styles.searchIcon} source={require('../assets/icons8-search-30.png')}></Image>
                 </View>
                 <View style={{flexDirection: "row", position: "absolute", bottom: 6, right: 65 }}>
                     <Text style={{color: "grey", alignSelf: "center"}}>Please enter product name</Text>
                 </View>
             </TouchableOpacity>
         </View>
-        <SliderBox
-            images={topProductImages}
-            onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
-            currentImageEmitter={index => console.warn(`current pos is: ${index}`)}
-        />
-        <FlatList
-            data={productCategories}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            style={styles.container}
-            contentContainerStyle={styles.list}
-            numColumns={2}
-        />
+        <ScrollView style={{ flexDirection: "column"}}>
+
+        <ScrollView
+          style={{height: 300}}
+          horizontal={true}
+          scrollEventThrottle={16}
+          pagingEnabled={true}
+        >
+            {
+            topProductImages.map((image, index) => {
+                return (
+                    <TouchableOpacity onPress={() => topProductPress(index)} key={image} delayPressIn={70}>
+                    <View style={{width: 393, height: 300, backgroundColor: "white"}}>
+                        <Image style={{width: 393, height: 300}} source={{uri: image}}></Image>
+                    </View>
+                    </TouchableOpacity>
+                )
+            })
+            }
+        </ScrollView>
+
+            {
+                productCategories.map((item, index) => {
+                    if(index % 2 == 0 && index + 1 != productCategories.length) {
+                        return (
+                            <View key={index} style={{flexDirection: "row", alignSelf: "center"}}>
+                                <TouchableOpacity onPress={() => productCategoryPress(index)} delayPressIn={70} style={{height: 250, width: 185, flexDirection: "column", justifyContent: "space-evenly", marginHorizontal: 4, marginVertical: 6, backgroundColor: ProjectColors.white, elevation: 3}}>
+                                    <View style={{width: 170, height: 170, alignSelf: "center"}}>
+                                        <Image style={{width: 170, height: 170}} source={{uri: item.productCategoryImageURL}}></Image>
+                                    </View>
+                                
+                                    <Text style={{alignSelf: "center", color: "black", fontFamily: "bold"}}>{item.productCategoryName}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => productCategoryPress(index+1)} delayPressIn={70} style={{height: 250, width: 185, flexDirection: "column", justifyContent: "space-evenly", marginHorizontal: 4, marginVertical: 6, backgroundColor: ProjectColors.white, elevation: 3}}>
+                                    <View style={{width: 170, height: 170, alignSelf: "center"}}>
+                                        <Image style={{width: 170, height: 170}} source={{uri: productCategories[index+1].productCategoryImageURL}}></Image>
+                                    </View>
+                                
+                                    <Text style={{alignSelf: "center", color: "black", fontFamily: "bold"}}>{productCategories[index+1].productCategoryName}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    } else if(index % 2 == 0 && index + 1 == productCategories.length) {
+                        return (
+                        <View key={index} style={{flexDirection: "row", marginLeft: 5}}>
+                            <TouchableOpacity onPress={() => productCategoryPress(index)} delayPressIn={70} style={{height: 250, width: 185, flexDirection: "column", justifyContent: "space-evenly", marginHorizontal: 4, marginVertical: 6, backgroundColor: ProjectColors.white, elevation: 3}}>
+                                    <View style={{width: 170, height: 170, alignSelf: "center"}}>
+                                        <Image style={{width: 170, height: 170}} source={{uri: item.productCategoryImageURL}}></Image>
+                                    </View>
+                                
+                                    <Text style={{alignSelf: "center", color: "black", fontFamily: "bold"}}>{item.productCategoryName}</Text>
+                            </TouchableOpacity>
+                        </View> )
+
+                    }
+                })
+            }
+        </ScrollView >
+        <Footer productHeaderNavigation={navigation} currentScreen="Home"></Footer>
     </SafeAreaView>
 
     )

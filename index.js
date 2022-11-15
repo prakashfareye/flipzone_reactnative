@@ -11,6 +11,8 @@ import Search from './src/components/Search'
 import ProductList from './src/components/ProductList'
 import Product from './src/components/Product'
 import Cart from './src/components/Cart'
+import Footer from './src/components/Footer'
+import Summary from './src/components/Summary'
 
 
-AppRegistry.registerComponent(appName, () => Home);
+AppRegistry.registerComponent(appName, () => App);
