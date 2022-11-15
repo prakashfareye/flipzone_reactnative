@@ -36,6 +36,7 @@ import Product from './components/Product';
 import Cart from './components/Cart';
 import Account from './components/Account';
 import Summary from './components/Summary';
+import Transaction from './components/Transaction';
 
 
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,7 @@ const App = () => {
         <Stack.Screen name="Cart" component={Cart} options={{headerShown: false}} />
         <Stack.Screen name="Account" component={Account} options={{headerShown: false}} />
         <Stack.Screen name="Summary" component={Summary} options={{headerShown: false}} />
+        <Stack.Screen name="Transaction" component={Transaction} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

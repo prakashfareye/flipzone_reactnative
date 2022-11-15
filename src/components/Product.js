@@ -39,12 +39,19 @@ const Product = ({ navigation, route }) => {
         {
             "productId": 1,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "brand",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 30000,
             "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
         }
     )
+
+    buyNow = () => {
+        AsyncStorage.setItem('summary', JSON.stringify(product))
+        .then(() => navigation.navigate("Summary"))
+        .catch(error => console.log("buyNow AsyncStorage error"));
+    }
+
     return (
         <SafeAreaView style={{backgroundColor: ProjectColors.white, flex: 1}}>
             <ProductHeader productHeaderNavigation={navigation} title={product.productName}></ProductHeader>
@@ -57,15 +64,26 @@ const Product = ({ navigation, route }) => {
                 </View>
                 <View style={{width: 375, flexDirection: "column", justifyContent: "center", backgroundColor: ProjectColors.mint, alignSelf: "center", elevation: 3}}>
                     <Text style={{color: "black", textTransform: 'uppercase', fontSize: 20, fontWeight: "500"}}>{product.productName}</Text>
-                    <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>seller: <Text style={{textTransform: 'lowercase'}}>{product.retailer}</Text></Text>
+                    <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>Brand: <Text style={{textTransform: 'lowercase'}}>{product.brand}</Text></Text>
                     <Text style={{color: "black", fontSize: 25, alignSelf: "center", fontWeight: "800", paddingTop: 10}}>$ <Text>{product.productPrice}</Text></Text>
                 </View>
                 <View style={{lexDirection: "column", marginTop: 10, marginHorizontal: 10, marginBottom: 5}}>
                     <Text style={{color: "black", fontSize: 20, fontWeight: "450"}}>Highlights</Text>
                     {product.productDescription.split(",").map((feature) => {
                             return (      
-                                <View key={feature} style={{borderColor: "grey", marginVertical: 2}}>
-                                    <Text style={{color: "black", fontSize: 10}}>{'\u2B24'}<Text style={{fontSize: 15}}>  {feature}</Text></Text>
+                                <View key={feature} style={{borderColor: "grey", marginVertical: 2, flexDirection: "column"}}>
+                                <View style={{flexDirection: "row"}}> 
+                                    <View style={{width: 40, height: 40, alignSelf: "center"}}>
+                                        <Image styles={styles.searchIcon} source={require('../assets/icons8-tag-window-48.png')}></Image>
+                                    </View>
+                                    <Text style={{fontSize: 15, alignSelf: "center"}}>      {feature}</Text>
+                                </View> 
+                                <View style={{flexDirection: "row"}}> 
+                                    <View style={{width: 40, height: 40, alignSelf: "center"}}>
+                                        <Image styles={styles.searchIcon} source={require('../assets/icons8-tag-window-48.png')}></Image>
+                                    </View>
+                                    <Text style={{fontSize: 15, alignSelf: "center"}}>      {feature}</Text>
+                                </View> 
                                 </View>
                     )})
 
@@ -76,7 +94,7 @@ const Product = ({ navigation, route }) => {
                     <TouchableOpacity style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
                         <Text style={styles.buttonText}>Add to cart</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+                    <TouchableOpacity onPress={buyNow} style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
                         <Text style={styles.buttonText}>Buy now</Text>
                     </TouchableOpacity>
             </View>
@@ -95,6 +113,10 @@ const styles = StyleSheet.create({
       buttonText: {
         color: "white",
         alignSelf: "center"
+      },
+      searchIcon: {
+        width: 40,
+        height: 40,
       },
 })
 

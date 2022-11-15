@@ -27,6 +27,17 @@ const Home = ({ navigation, route }) => {
     
 
     useEffect(() => {
+
+        AsyncStorage.setItem('user', JSON.stringify({
+            "userId": 1,
+            "userName": "Prakash Ranjan",
+            "userEmailId" : "p2@gmail.com",
+            "password": "abcd",
+            "role":"ROLE_USER"
+        }))
+        .then(json => console.log('User Detail Saving success!'))
+        .catch(error => console.log('User Detail Saving error!'));
+
         console.log("home")
         fetch('http://10.0.2.2:8085/category', {
             method: 'GET',

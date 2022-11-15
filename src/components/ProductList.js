@@ -101,7 +101,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 1,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 30000,
             "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
@@ -109,7 +109,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 2,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 40000,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -117,7 +117,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 3,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 100,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -125,7 +125,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 4,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 10,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -211,7 +211,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 1,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 30000,
             "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
@@ -219,7 +219,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 2,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 40000,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -227,7 +227,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 3,
             "productName": "shoes",
-            "retailer": "retailer",
+            "brand": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 100,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -235,7 +235,7 @@ const ProductList = ( { navigation, route } ) => {
         {
             "productId": 4,
             "productName": "shoes",
-            "retailer": "retailer",
+            "retailbrander": "retailer",
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 10,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -259,7 +259,7 @@ const ProductList = ( { navigation, route } ) => {
             </View>
             <View style={{width: 200, position: "absolute", top: 5, right: 10, flexDirection: "column"}}>
                 <Text style={{color: "black", textTransform: 'uppercase', fontSize: 20, fontWeight: "500"}}>{item.productName}</Text>
-                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>seller: <Text style={{textTransform: 'lowercase'}}>{item.retailer}</Text></Text>
+                <Text style={{color: "black", textTransform: 'uppercase', fontSize: 15, paddingTop: 10}}>Brand: <Text style={{textTransform: 'lowercase'}}>{item.brand}</Text></Text>
                 <Text style={{color: "black", fontSize: 25, alignSelf: "center", fontWeight: "800", paddingTop: 10}}>$ <Text>{item.productPrice}</Text></Text>
             </View>
             </TouchableOpacity>

@@ -19,17 +19,30 @@ import {
 
 import {ProjectColors} from './colors/ProjectColors';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import Footer from './Footer';
 
 const Summary = ({ navigation, route }) => {
 
     useEffect(() => {
-        initialTotalPrice = productItem[0].productPrice*productItem[0].productItemCount
-        initialTotalItems = productItem[0].productItemCount
+        console.log("summary")
+            AsyncStorage.getItem('summary')
+            .then((result) => {
+                result = JSON.parse(result)
+                result.productItemCount=1
+                initialTotalPrice = result.productPrice*result.productItemCount
+                initialTotalItems = result.productItemCount
+        
+        
+                setTotalPrice(initialTotalPrice)
+                setTotalItems(initialTotalItems)
+                setProductItem([result])
+            })
+            .catch(error => console.log("Product AsyncStorage  error"));
+        
 
-
-        setTotalPrice(initialTotalPrice)
-        setTotalItems(initialTotalItems)
         
     }, [])
 
@@ -37,15 +50,15 @@ const Summary = ({ navigation, route }) => {
     const [totalItems, setTotalItems] = useState(8)
     const [productItem, setProductItem] = useState(
         [
-            {
-                "productId": 1,
-                "productName": "shoes",
-                "brand": "brand",
-                "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-                "productPrice": 30000,
-                "productDescription": "key feature 1,key feature 2222222,key feature 353434353",
-                "productItemCount": 1
-            },
+            // {
+            //     "productId": 1,
+            //     "productName": "shoes",
+            //     "brand": "brand",
+            //     "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
+            //     "productPrice": 30000,
+            //     "productDescription": "key feature 1,key feature 2222222,key feature 353434353",
+            //     "productItemCount": 1
+            // },
         ]
     )
 
@@ -82,6 +95,10 @@ const Summary = ({ navigation, route }) => {
         setTotalPrice(0)
         setTotalItems(0)
 
+    }
+
+    const handlePlaceOrder =() => {
+        navigation.navigate("Transaction");
     }
 
     const routeBack = () => {
@@ -155,11 +172,11 @@ const Summary = ({ navigation, route }) => {
             <View style={{flexDirection: "row", justifyContent: "space-evenly", height: 75, elevation: 3, backgroundColor: ProjectColors.white, borderTopWidth: 0.5, borderBottomWidth: 0.25}}>
                 <Text style={{color: "black", fontSize: 25, alignSelf: "center", fontWeight: "800"}}>$ {totalPrice}</Text>
 
-                <TouchableOpacity style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
+                <TouchableOpacity style={[styles.button, {backgroundColor: ProjectColors.navy}]} onPress={handlePlaceOrder}>
                     <Text style={styles.buttonText}>Place Order</Text>
                 </TouchableOpacity>
             </View>
-            <Footer productHeaderNavigation={navigation} currentScreen="Cart"></Footer>
+            <Footer productHeaderNavigation={navigation} currentScreen="Summary"></Footer>
         </SafeAreaView>
     )
 }
