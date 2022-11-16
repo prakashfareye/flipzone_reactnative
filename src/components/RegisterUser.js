@@ -59,17 +59,16 @@ const RegisterUser = ({route, navigation}) => {
   });
 
   const getUserDetailFromAsyncSrorage = () => {
-    AsyncStorage.getItem('user')
-            .then((res) => {
-              res = JSON.parse(res)
-              if (res !== null) {
-                if(res.role == "ROLE_USER") {
-                  navigation.navigate("Home")
-                } else {
-                  navigation.navigate("My Listing")
-                }}
-            })
-
+    AsyncStorage.getItem('user').then(res => {
+      res = JSON.parse(res);
+      if (res !== null) {
+        if (res.role == 'ROLE_USER') {
+          navigation.navigate('Home');
+        } else {
+          navigation.navigate('My Listing');
+        }
+      }
+    });
   };
 
   const validateEmailRunTime = text => {
@@ -116,10 +115,10 @@ const RegisterUser = ({route, navigation}) => {
       .then(res => {
         console.log(res);
         saveUserToAsyncStorage(res);
-        if(res.role == "ROLE_USER") {
-          navigation.navigate("Home")
+        if (res.role == 'ROLE_USER') {
+          navigation.navigate('Home');
         } else {
-          navigation.navigate("My Listing")
+          navigation.navigate('My Listing');
         }
       })
       .catch(error => console.log('fetchToken error: ', error));
@@ -145,7 +144,7 @@ const RegisterUser = ({route, navigation}) => {
         userName: name,
         userEmailId: email,
         password: password,
-        role: checked,
+        role: role,
       }),
     })
       .then(response => response.json())
@@ -158,21 +157,21 @@ const RegisterUser = ({route, navigation}) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            "pinCode": "",
-            "description" : "",
-            "userId": res.userId
-          })
+            pinCode: '',
+            description: '',
+            userId: res.userId,
+          }),
         })
           .then(response => response.json())
-          .then(res => {
-            if(res.role == "ROLE_USER") {
-              navigation.navigate("Home")
+          .then(addressRes => {
+            if (res.role === 'ROLE_USER') {
+              console.log('Checking Role', res.role);
+              navigation.navigate('Home');
             } else {
-              navigation.navigate("My Listing")
+              navigation.navigate('My Listing');
             }
           })
           .catch(error => console.log('address create api fail', error));
-
       })
       .catch(error => console.log('fetchToken error: ', error));
   };

@@ -16,6 +16,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -26,8 +27,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Home from './components/Home';
 import Search from './components/Search';
@@ -42,31 +45,81 @@ import Listing from './components/Listing';
 import AddProduct from './components/AddProduct';
 import ImageUpload from './components/ImageUpload';
 
-
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Registration Page">
-        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-        <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
-        <Stack.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
-        <Stack.Screen name="Product" component={Product} options={{ headerShown: false }} />
-        <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }} />
-        <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
-        <Stack.Screen name="Summary" component={Summary} options={{ headerShown: false }} />
-        <Stack.Screen name="Transaction" component={Transaction} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ProductList"
+          component={ProductList}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Product"
+          component={Product}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Account"
+          component={Account}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Summary"
+          component={Summary}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Transaction"
+          component={Transaction}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Registration Page"
           component={RegisterUser}
-          options={{ header: () => null }}
+          options={{header: () => null}}
         />
         <Stack.Screen
           name="My Listing"
           component={Listing}
-          options={{ headerLeft: () => null }}
+          options={({navigation}) => ({
+            headerBackVisible: false,
+            headerRight: () => (
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    AsyncStorage.setItem('user', '');
+                    navigation.navigate('Registration Page');
+                  }}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontWeight: 'bold',
+                      textDecorationLine: 'underline',
+                    }}>
+                    Logout
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
         />
         <Stack.Screen name="Add Product" component={AddProduct} />
         <Stack.Screen name="Upload Image" component={ImageUpload} />
