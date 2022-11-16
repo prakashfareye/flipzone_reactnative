@@ -47,6 +47,7 @@ const ProductList = ( { navigation, route } ) => {
                     })
                     .catch(error => console.log('get all categories api fail ', error));
             } else {
+                console.log("similarProducts")
                 AsyncStorage.getItem('similarProducts')
                 .then((result) => {
                     if(result != undefined) {
@@ -212,6 +213,7 @@ const ProductList = ( { navigation, route } ) => {
             "productId": 1,
             "productName": "shoes",
             "brand": "retailer",
+            "productQuantity": 5,
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 30000,
             "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
@@ -228,6 +230,7 @@ const ProductList = ( { navigation, route } ) => {
             "productId": 3,
             "productName": "shoes",
             "brand": "retailer",
+            "productQuantity": 5,
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 100,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -236,6 +239,7 @@ const ProductList = ( { navigation, route } ) => {
             "productId": 4,
             "productName": "shoes",
             "retailbrander": "retailer",
+            "productQuantity": 5,
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 10,
             "productDescription": "key feature 1,key feature 2,key feature 3"
@@ -244,9 +248,10 @@ const ProductList = ( { navigation, route } ) => {
     ])
 
     const productCardPress = (index) => {
+        console.log(products[index])
         AsyncStorage.setItem('ProductFeatures', JSON.stringify(products[index]))
         .then(() => navigation.navigate("Product"))
-        .catch(error => console.log("productCardPress AsyncStorage error"));
+        .catch(error => console.log("productCardPress AsyncStorage error", error));
     }
 
     const keyExtractor = (item) => item.productId;

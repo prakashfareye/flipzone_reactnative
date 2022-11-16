@@ -41,7 +41,7 @@ const Footer = (props) => {
     return (
         <View style={styles.defaultStyle}>
             <TouchableOpacity onPress={homePress} tyle={styles.searchBar}>
-                <View style={{position: "absolute", left: 22, top: 0}}>
+                <View style={{position: "absolute", left: 13, top: 0}}>
                 <Image styles={styles.searchIcon} source={require('../assets/icons8-home-page-32.png')}></Image>
                 </View>
                 <Text style={{color: props.currentScreen=="Home"? ProjectColors.navy : "black", alignSelf: "center", marginTop: 20, fontWeight: "500" }}>Home</Text>
@@ -53,7 +53,7 @@ const Footer = (props) => {
                 <Text style={{color: props.currentScreen=="Account"? ProjectColors.navy : "black", alignSelf: "center", marginTop: 20, fontWeight: "500"}}>Account</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={cartPress} style={styles.searchBar}>
-                <View style={{position: "absolute", left: 25, top: 0}}>
+                <View style={{position: "absolute", left: 22, top: 0}}>
                 <Image styles={styles.searchIcon} source={require('../assets/icons8-shopping-cart-30.png')}></Image>
                 </View>
                 <Text style={{color: props.currentScreen=="Cart"? ProjectColors.navy : "black", alignSelf: "center", marginTop: 20, fontWeight: "500"}}>Cart</Text>

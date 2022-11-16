@@ -28,15 +28,15 @@ const Home = ({ navigation, route }) => {
 
     useEffect(() => {
 
-        AsyncStorage.setItem('user', JSON.stringify({
-            "userId": 1,
-            "userName": "Prakash Ranjan",
-            "userEmailId" : "p2@gmail.com",
-            "password": "abcd",
-            "role":"ROLE_USER"
-        }))
-        .then(json => console.log('User Detail Saving success!'))
-        .catch(error => console.log('User Detail Saving error!'));
+        // AsyncStorage.setItem('user', JSON.stringify({
+        //     "userId": 1,
+        //     "userName": "Prakash Ranjan",
+        //     "userEmailId" : "p2@gmail.com",
+        //     "password": "abcd",
+        //     "role":"ROLE_USER"
+        // }))
+        // .then(json => console.log('User Detail Saving success!'))
+        // .catch(error => console.log('User Detail Saving error!'));
 
         console.log("home")
         fetch('http://10.0.2.2:8085/category', {
@@ -48,24 +48,27 @@ const Home = ({ navigation, route }) => {
             })
             .catch(error => console.log('get all categories api fail ', error));
 
+            fetch('http://10.0.2.2:8085/product', {
+                method: 'GET',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    imageList = []
+                    data.forEach(element => {
+                        imageList.push(element.productImageURL)
+                    });
+                    console.log(imageList)
+                    setTopProductImages(imageList)
+                    setTopProducts(data)
+                })
+                .catch(error => console.log('get top products api fail ', error));
+
       }, [])
 
     const [topProducts, setTopProducts] = useState([
-        {
-            "id": 1,
-            "name": "shoes",
-            "imageUrl": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        },
-        {
-            "id": 2,
-            "name": "shoes",
-            "imageUrl": "https://toppng.com/uploads/preview/free-png-plastic-water-bottle-png-11519803083hnhiljypmg.png"
-        },
     ])
 
     const [topProductImages, setTopProductImages] = useState([
-        "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png"
-        , "https://toppng.com/uploads/preview/free-png-plastic-water-bottle-png-11519803083hnhiljypmg.png"
     ])
 
     const [productCategories, setProductCategories] = useState([
@@ -95,7 +98,9 @@ const Home = ({ navigation, route }) => {
     }
 
     const topProductPress = (index) => {
-        console.log("top product category pressed " + index)
+        AsyncStorage.setItem('ProductFeatures', JSON.stringify(topProducts[index]))
+        .then(() => navigation.navigate("Product"))
+        .catch(error => console.log("home productCardPress AsyncStorage error", error));
     }
 
     return (
@@ -123,7 +128,7 @@ const Home = ({ navigation, route }) => {
             {
             topProductImages.map((image, index) => {
                 return (
-                    <TouchableOpacity onPress={() => topProductPress(index)} key={image} delayPressIn={70}>
+                    <TouchableOpacity onPress={() => topProductPress(index)} key={index} delayPressIn={70}>
                     <View style={{width: 393, height: 300, backgroundColor: "white"}}>
                         <Image style={{width: 393, height: 300}} source={{uri: image}}></Image>
                     </View>

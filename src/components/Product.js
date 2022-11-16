@@ -25,21 +25,53 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Product = ({ navigation, route }) => {
 
     useEffect(() => {
-        AsyncStorage.getItem('ProductFeatures')
-        .then((result) => {
-            if(result != undefined) {
-                result = JSON.parse(result)
-                setProduct(result)
+        const unsubscribe = navigation.addListener('focus', () => {
+            AsyncStorage.getItem('ProductFeatures')
+            .then((result) => {
+                if(result != undefined) {
+                    result = JSON.parse(result)
+                    setProduct(result)
+                    console.log(result.productQuantity)
+                    if(result.productQuantity == 0) {
+                        setProductStatus("Unavailable")
+                    } else {
+                        AsyncStorage.getItem('user')
+                        .then((data) => {
+                            if(data != undefined) {
+                                data = JSON.parse(data)
+                                console.log(data)
+                                setUserId(data.userId)
+                                fetch('http://10.0.2.2:8085/cartItem/p/' + result.productId + "/" + data.userId, {
+                                    method: 'GET',
+                                    })
+                                    .then(recieved => recieved.json())
+                                    .then(recieved => {
+                                        console.log(recieved)
+                                        if(recieved.length != 0) {
+                                            setProductStatus("Incart")
+                                        }
+                                    })
+                                    .catch(error => console.log('cart productapi fail ', error));
+                            }
+                        })
+                        .catch(error => console.log("Product user AsyncStorage  error"));
+                }
             }
         })
         .catch(error => console.log("Product AsyncStorage  error"));
+        })
+        
     }, [])
+
+    const [userId, setUserId] = useState(0)
+    const [productStatus, setProductStatus] = useState("Available")
 
     const [product, setProduct] = useState(
         {
             "productId": 1,
             "productName": "shoes",
             "brand": "brand",
+            "productQuantity": 5,
             "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
             "productPrice": 30000,
             "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
@@ -47,9 +79,34 @@ const Product = ({ navigation, route }) => {
     )
 
     buyNow = () => {
-        AsyncStorage.setItem('summary', JSON.stringify(product))
-        .then(() => navigation.navigate("Summary"))
-        .catch(error => console.log("buyNow AsyncStorage error"));
+        navigation.navigate("Summary")
+    }
+
+    addToCart = () => {
+        //api call
+        fetch('http://10.0.2.2:8085/cartItem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "userId": userId,
+        "productId": product.productId,
+        "cartItemQuantity": 1,
+        "cartItemPrice": product.productPrice
+      })
+    })
+      .then(response => response.json())
+      .then(res => {
+        console.log(res);
+        setProductStatus("Incart")
+      })
+      .catch(error => console.log('cart create api fail', error));
+
+    }
+
+    goToCart = () => {
+        navigation.navigate("Cart")
     }
 
     return (
@@ -90,14 +147,36 @@ const Product = ({ navigation, route }) => {
                     }
                 </View>
             </ScrollView>
+            { productStatus == "Available" &&
             <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
+                    <TouchableOpacity onPress={addToCart} style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
                         <Text style={styles.buttonText}>Add to cart</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={buyNow} style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
                         <Text style={styles.buttonText}>Buy now</Text>
                     </TouchableOpacity>
             </View>
+            }
+            { productStatus == "Unavailable" &&
+            <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+                    <View style={[styles.button, {backgroundColor: ProjectColors.grey}]}>
+                        <Text style={styles.buttonText}>Out of stock</Text>
+                    </View>
+                    <View style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+                        <Text style={styles.buttonText}>Buy now</Text>
+                    </View>
+            </View>
+            }
+            { productStatus == "Incart" &&
+            <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+                    <TouchableOpacity onPress={goToCart} style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
+                        <Text style={styles.buttonText}>Go to cart</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={buyNow} style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+                        <Text style={styles.buttonText}>Buy now</Text>
+                    </TouchableOpacity>
+            </View>
+            }
 
         </SafeAreaView>
     )

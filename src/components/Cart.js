@@ -40,8 +40,10 @@ const Cart = ({ navigation, route }) => {
                         initialTotalPrice = 0
                         initialTotalItems = 0
                         data.forEach((element) => {
+                            if(element.cartItemQuantity <= element.product.productQuantity) {
                             initialTotalPrice += element.cartItemQuantity*element.cartItemPrice
                             initialTotalItems += element.cartItemQuantity
+                            }
                         });
                 
                         setTotalPrice(initialTotalPrice)
@@ -57,26 +59,26 @@ const Cart = ({ navigation, route }) => {
     const [totalItems, setTotalItems] = useState(8)
     const [cartItems, setcartItems] = useState(
         [
-            // {
-            //     "cartItemId": 2,
-            //     "userId": 1,
-            //     "cartId": null,
-            //     "orderId": null,
-            //     "product": {
-            //         "productId": 1,
-            //         "categoryId": 1,
-            //         "productName": "Iphone 14",
-            //         "brand": null,
-            //         "userId": 1,
-            //         "productPrice": 90000,
-            //         "productDescription": "jjjjvjj",
-            //         "productQuantity": 500,
-            //         "productImageURL": "aaaa"
-            //     },
-            //     "productId": 1,
-            //     "cartItemQuantity": 2,
-            //     "cartItemPrice": 5000
-            // },
+            {
+                "cartItemId": 2,
+                "userId": 1,
+                "cartId": null,
+                "orderId": null,
+                "product": {
+                    "productId": 1,
+                    "categoryId": 1,
+                    "productName": "Iphone 14",
+                    "brand": null,
+                    "userId": 1,
+                    "productPrice": 90000,
+                    "productDescription": "jjjjvjj",
+                    "productQuantity": 5,
+                    "productImageURL": "aaaa"
+                },
+                "productId": 1,
+                "cartItemQuantity": 2,
+                "cartItemPrice": 90000
+            },
         ]
     )
 
@@ -84,29 +86,48 @@ const Cart = ({ navigation, route }) => {
         if(cartItems[index].cartItemQuantity == 1) {
             removeCartItem(index)
         } else {
-            cartItems[index].cartItemQuantity -= 1
-            updatedCartItems = [...cartItems]
-            console.log(updatedCartItems)
-            updatedTotalPrice = totalPrice - cartItems[index].cartItemPrice
-            updatedTotalItems = totalItems - 1
-            setcartItems(updatedCartItems)
-            setTotalPrice(updatedTotalPrice)
-            setTotalItems(updatedTotalItems)
+            fetch('http://10.0.2.2:8085/cartItem/decrease/' + cartItems[index].cartItemId, {
+                method: 'PUT',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    cartItems[index].cartItemQuantity -= 1
+                    updatedCartItems = [...cartItems]
+                    console.log(updatedCartItems)
+                    updatedTotalPrice = totalPrice - cartItems[index].cartItemPrice
+                    updatedTotalItems = totalItems - 1
+                    setcartItems(updatedCartItems)
+                    setTotalPrice(updatedTotalPrice)
+                    setTotalItems(updatedTotalItems)
+                })
+                .catch(error => console.log('increase count api fail ', error));
         }
 
     }
 
     plusClick = (index) => {
-        cartItems[index].cartItemQuantity += 1
-        updatedCartItems = [...cartItems]
-        updatedTotalPrice = totalPrice + cartItems[index].cartItemPrice
-        updatedTotalItems = totalItems + 1
-        setcartItems(updatedCartItems)
-        setTotalPrice(updatedTotalPrice)
-        setTotalItems(updatedTotalItems)
+        if(cartItems[index].cartItemQuantity != cartItems[index].product.productQuantity) {
+            fetch('http://10.0.2.2:8085/cartItem/increase/' + cartItems[index].cartItemId, {
+                method: 'PUT',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    cartItems[index].cartItemQuantity += 1
+                    updatedCartItems = [...cartItems]
+                    updatedTotalPrice = totalPrice + cartItems[index].cartItemPrice
+                    updatedTotalItems = totalItems + 1
+                    setcartItems(updatedCartItems)
+                    setTotalPrice(updatedTotalPrice)
+                    setTotalItems(updatedTotalItems)
+                })
+                .catch(error => console.log('increase count api fail ', error));
+            }
     }
 
     removeCartItem = (index) => {
+        // api call
         console.log(index)
         updatedTotalPrice = totalPrice - cartItems[index].cartItemPrice*cartItems[index].cartItemQuantity
         updatedTotalItems = totalItems - cartItems[index].cartItemQuantity
@@ -119,7 +140,10 @@ const Cart = ({ navigation, route }) => {
     }
     
     const handlePlaceOrder =() => {
-        navigation.navigate("Transaction");
+        AsyncStorage.removeItem("productTransaction")
+        AsyncStorage.setItem('cartTransaction', JSON.stringify(cartItems))
+        .then(() => navigation.navigate("Transaction"))
+        .catch(error => console.log("transaction handlePlaceOrder  AsyncStorage error", error));
     }
 
     const routeBack = () => {
@@ -137,6 +161,7 @@ const Cart = ({ navigation, route }) => {
 
     const renderItem = ({ item, index }) => (
         <View>
+        { item.cartItemQuantity <= item.product.productQuantity && 
         <TouchableOpacity onPress={() => productCardPress(index)} delayPressIn={75} style={{height: 300, width: 375, backgroundColor: ProjectColors.white, marginBottom: 10}}>
             <View style={{width: 150, height: 150, position: "absolute", top: 5, left: 5, borderWidth: 0.5}}>
                 <Image style={{width: 150, height: 150}} source={{uri: item.product.productImageURL}}></Image>
@@ -156,10 +181,10 @@ const Cart = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
             <Text onPress={() => removeCartItem(index)} style={{position: "absolute", bottom: 30, left: 165, color: ProjectColors.navy, fontWeight: "500", fontSize: 15}}>Remove</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
         {
             (index==cartItems.length-1) && 
-            <View style={{height: 200, backgroundColor: "white"}}>
+            <View style={{height: 200, backgroundColor: "white", width: 375}}>
                 <Text style={{color: "black", fontSize: 15, fontWeight: "700", marginBottom: 5}}>Price Details</Text>
                 <Text style={{color: "black", fontSize: 15, position: "absolute", top: 50, left: 10}}>price ({totalItems} items)</Text>
                 <Text style={{color: "black", fontSize: 15, position: "absolute", top: 50, right: 10}}>$ {totalPrice}</Text>

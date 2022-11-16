@@ -28,7 +28,7 @@ const Summary = ({ navigation, route }) => {
 
     useEffect(() => {
         console.log("summary")
-            AsyncStorage.getItem('summary')
+            AsyncStorage.getItem('ProductFeatures')
             .then((result) => {
                 result = JSON.parse(result)
                 result.productItemCount=1
@@ -47,18 +47,19 @@ const Summary = ({ navigation, route }) => {
     }, [])
 
     const [totalPrice, setTotalPrice] = useState(0)
-    const [totalItems, setTotalItems] = useState(8)
+    const [totalItems, setTotalItems] = useState(1)
     const [productItem, setProductItem] = useState(
         [
-            // {
-            //     "productId": 1,
-            //     "productName": "shoes",
-            //     "brand": "brand",
-            //     "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-            //     "productPrice": 30000,
-            //     "productDescription": "key feature 1,key feature 2222222,key feature 353434353",
-            //     "productItemCount": 1
-            // },
+            {
+                "productId": 1,
+                "productName": "shoes",
+                "brand": "brand",
+                "productQuantity": 5,
+                "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
+                "productPrice": 30000,
+                "productDescription": "key feature 1,key feature 2222222,key feature 353434353",
+                "productItemCount": 1
+            },
         ]
     )
 
@@ -72,22 +73,27 @@ const Summary = ({ navigation, route }) => {
             updateProductItem = [...productItem]
             updateProductItem[0].productItemCount -= 1
             updatedtotalPrice = updateProductItem[0].productItemCount*updateProductItem[0].productPrice
-            updatedtotalItems = updateProductItem[0].productItemCount - 1
+            updatedtotalItems = totalItems -1
             setProductItem(updateProductItem)
-            setTotalItems(updateProductItem)
+            setTotalItems(updatedtotalItems)
             setTotalPrice(updatedtotalPrice)
         }
 
     }
 
     plusClick = () => {
+        if(productItem[0].productItemCount != productItem[0].productQuantity) {
         updateProductItem = [...productItem]
         updateProductItem[0].productItemCount += 1
         updatedtotalPrice = updateProductItem[0].productItemCount*updateProductItem[0].productPrice
-        updatedtotalItems = updateProductItem[0].productItemCount + 1
+        updatedtotalItems = totalItems + 1
         setProductItem(updateProductItem)
         setTotalItems(updatedtotalItems)
-        setTotalPrice(updatedtotalPrice)
+        setTotalPrice(updatedtotalPrice) }
+    }
+
+    const productCardPress = (index) => {
+        navigation.navigate("Product")
     }
 
     removeCartItem = () => {
@@ -98,7 +104,10 @@ const Summary = ({ navigation, route }) => {
     }
 
     const handlePlaceOrder =() => {
-        navigation.navigate("Transaction");
+        AsyncStorage.removeItem("cartTransaction")
+        AsyncStorage.setItem('productTransaction', JSON.stringify(productItem[0]))
+        .then(() => navigation.navigate("Transaction"))
+        .catch(error => console.log("summary handlePlaceOrder  AsyncStorage error", error));
     }
 
     const routeBack = () => {
@@ -110,7 +119,7 @@ const Summary = ({ navigation, route }) => {
 
     const renderItem = ({ item, index}) => (
         <View>
-        <TouchableOpacity delayPressIn={75} style={{height: 300, width: 375, backgroundColor: ProjectColors.white, marginBottom: 10}}>
+        <TouchableOpacity onPress={productCardPress} delayPressIn={75} style={{height: 300, width: 375, backgroundColor: ProjectColors.white, marginBottom: 10}}>
             <View style={{width: 150, height: 150, position: "absolute", top: 5, left: 5, borderWidth: 0.5}}>
                 <Image style={{width: 150, height: 150}} source={{uri: item.productImageURL}}></Image>
             </View>
@@ -124,7 +133,7 @@ const Summary = ({ navigation, route }) => {
                         <Text style={{alignSelf: "center"}}>-</Text>
                 </TouchableOpacity>
                 <Text style={{height: 40, width: 40, fontWeight: "800", color: ProjectColors.black, textAlignVertical: 'center', textAlign: "center", borderWidth: 1}}>{item.productItemCount}</Text>
-                <TouchableOpacity onPress={() => plusClick()} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
+                <TouchableOpacity disables={productItem[0].productItemCount != productItem[0].productQuantity}onPress={plusClick} style={{height: 40, width: 40, borderWidth: 1, flexDirection: "row", justifyContent: "space-evenly"}}>
                         <Text style={{alignSelf: "center"}}>+</Text>
                 </TouchableOpacity>
             </View>
