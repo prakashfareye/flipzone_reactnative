@@ -347,10 +347,17 @@ const ProductList = ({navigation, route}) => {
             position: 'absolute',
             top: 10,
             left: 5,
-            borderWidth: 0.5,
+
+            borderWidth: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <Image
-            style={{width: 150, height: 200}}
+            style={{
+              width: 120,
+              height: 180,
+            }}
             source={{uri: item.productImageURL}}></Image>
         </View>
         <View

@@ -134,11 +134,13 @@ const Product = ({navigation, route}) => {
             alignSelf: 'center',
             backgroundColor: 'white',
             marginTop: 10,
-            borderWidth: 0.5,
+            borderWidth: 0,
+            // borderColor: 'red',
             elevation: 3,
+            padding: 20,
           }}>
           <Image
-            style={{width: 375, height: 400, alignSelf: 'center'}}
+            style={{width: 265, height: 360, alignSelf: 'center'}}
             source={{uri: product.productImageURL}}></Image>
         </View>
         <View
@@ -149,6 +151,7 @@ const Product = ({navigation, route}) => {
             backgroundColor: ProjectColors.mint,
             alignSelf: 'center',
             elevation: 3,
+            padding: 10,
           }}>
           <Text
             style={{
@@ -206,8 +209,7 @@ const Product = ({navigation, route}) => {
                       source={require('../assets/icons8-tag-window-48.png')}></Image>
                   </View>
                   <Text style={{fontSize: 15, alignSelf: 'center'}}>
-                    {' '}
-                    {feature}
+                    ` {feature}`
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
@@ -217,8 +219,7 @@ const Product = ({navigation, route}) => {
                       source={require('../assets/icons8-tag-window-48.png')}></Image>
                   </View>
                   <Text style={{fontSize: 15, alignSelf: 'center'}}>
-                    {' '}
-                    {feature}
+                    ` {feature}`
                   </Text>
                 </View>
               </View>
