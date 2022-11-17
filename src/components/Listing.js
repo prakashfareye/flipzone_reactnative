@@ -14,7 +14,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Listing = ({route, navigation}) => {
-  const [searchToggle, setSearchToggle] = useState();
+  const [sortToggle, setSortToggle] = useState(true);
   const [list, setList] = useState([]);
   const [filterby, setFilterBy] = useState('');
   const [filterData, setFilterData] = useState([]);
@@ -83,13 +83,25 @@ const Listing = ({route, navigation}) => {
     setFilterBy(text);
   };
 
+  const SortHandler=()=>{
+    if(sortToggle){filterData.sort((a, b) =>
+      b.productPrice - a.productPrice
+    );setSortToggle(!sortToggle);}
+else{filterData.sort((a, b) =>
+    a.productPrice - b.productPrice);setSortToggle(!sortToggle)}
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.sectionView}>
         <View>
           <Text style={styles.headerText}>{`Hello, ${user.userName}`}</Text>
           <Text style={styles.headerSubText}>{`${user.userEmailId}`}</Text>
+          <Text></Text>
         </View>
+        
+          
+        
 
         <View style={styles.textInput}>
           <TextInput
@@ -106,11 +118,21 @@ const Listing = ({route, navigation}) => {
               //       setFilterBy('');
               FilterHandler(filterby);
             }}>
+              
             <Image
               style={styles.image}
               source={require('../assets/search.png')}
             />
           </TouchableOpacity>
+          <TouchableOpacity onPress={SortHandler} >
+          <Image style={[styles.image,{height:25,width:25}]}
+              source={require('../assets/sort.png')}
+             
+            />
+            
+           
+          </TouchableOpacity>
+
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
@@ -200,6 +222,7 @@ const styles = StyleSheet.create({
   textInput: {
     flexDirection: 'row',
     marginTop: 30,
+    alignSelf:'center'
   },
 
   image: {
