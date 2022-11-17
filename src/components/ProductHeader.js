@@ -71,6 +71,7 @@ const ProductHeader = props => {
             styles={styles.searchIcon}
             source={require('../assets/icons8-shopping-cart-30.png')}></Image>
         </View>
+         
       </TouchableOpacity>
     </View>
   );
