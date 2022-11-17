@@ -169,43 +169,43 @@ const ProductList = ({navigation, route}) => {
   const [sortBy, setSortBy] = useState(0);
   const [filterBy, setFilterBy] = useState(0);
   const [fullProducts, setFullProducts] = useState([
-    {
-      productId: 1,
-      productName: 'shoes',
-      brand: 'retailer',
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 30000,
-      productDescription:
-        'key feature 1,key feature 2222222,key feature 353434353',
-    },
-    {
-      productId: 2,
-      productName: 'shoes',
-      brand: 'retailer',
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 40000,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
-    {
-      productId: 3,
-      productName: 'shoes',
-      brand: 'retailer',
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 100,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
-    {
-      productId: 4,
-      productName: 'shoes',
-      brand: 'retailer',
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 10,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
+    // {
+    //   productId: 1,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 30000,
+    //   productDescription:
+    //     'key feature 1,key feature 2222222,key feature 353434353',
+    // },
+    // {
+    //   productId: 2,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 40000,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
+    // {
+    //   productId: 3,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 100,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
+    // {
+    //   productId: 4,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 10,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
   ]);
 
   const typePress = type => {
@@ -276,46 +276,46 @@ const ProductList = ({navigation, route}) => {
   };
 
   const [products, setProducts] = useState([
-    {
-      productId: 1,
-      productName: 'shoes',
-      brand: 'retailer',
-      productQuantity: 5,
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 30000,
-      productDescription:
-        'key feature 1,key feature 2222222,key feature 353434353',
-    },
-    {
-      productId: 2,
-      productName: 'shoes',
-      brand: 'retailer',
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 40000,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
-    {
-      productId: 3,
-      productName: 'shoes',
-      brand: 'retailer',
-      productQuantity: 5,
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 100,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
-    {
-      productId: 4,
-      productName: 'shoes',
-      retailbrander: 'retailer',
-      productQuantity: 5,
-      productImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-      productPrice: 10,
-      productDescription: 'key feature 1,key feature 2,key feature 3',
-    },
+    // {
+    //   productId: 1,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productQuantity: 5,
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 30000,
+    //   productDescription:
+    //     'key feature 1,key feature 2222222,key feature 353434353',
+    // },
+    // {
+    //   productId: 2,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 40000,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
+    // {
+    //   productId: 3,
+    //   productName: 'shoes',
+    //   brand: 'retailer',
+    //   productQuantity: 5,
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 100,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
+    // {
+    //   productId: 4,
+    //   productName: 'shoes',
+    //   retailbrander: 'retailer',
+    //   productQuantity: 5,
+    //   productImageURL:
+    //     'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
+    //   productPrice: 10,
+    //   productDescription: 'key feature 1,key feature 2,key feature 3',
+    // },
   ]);
 
   const productCardPress = index => {
@@ -347,10 +347,17 @@ const ProductList = ({navigation, route}) => {
             position: 'absolute',
             top: 10,
             left: 5,
-            borderWidth: 0.5,
+
+            borderWidth: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <Image
-            style={{width: 150, height: 200}}
+            style={{
+              width: 120,
+              height: 180,
+            }}
             source={{uri: item.productImageURL}}></Image>
         </View>
         <View

@@ -130,7 +130,7 @@ const Home = ({navigation, route}) => {
       </View>
       <ScrollView style={{flexDirection: 'column'}}>
         <ScrollView
-          style={{height: 300}}
+        style={{marginTop: 10}}
           horizontal={true}
           scrollEventThrottle={16}
           pagingEnabled={true}>
@@ -138,10 +138,13 @@ const Home = ({navigation, route}) => {
             return (
               <TouchableOpacity
                 onPress={() => topProductPress(index)}
+                style={{}}
                 key={index}
                 delayPressIn={70}>
                 <View
-                  style={{width: 393, height: 300, backgroundColor: 'white'}}>
+                  style={{width: 300, backgroundColor: ProjectColors.navy, margin: 4, display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',padding: 5 }}>
                   <Image
                     style={{width: '100%', height: undefined, aspectRatio: 1}}
                     source={{uri: image}}></Image>

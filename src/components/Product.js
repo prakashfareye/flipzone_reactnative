@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,13 +16,13 @@ import {
   FlatList,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import ProductHeader from './ProductHeader';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Product = ({navigation, route}) => {
+const Product = ({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       AsyncStorage.getItem('ProductFeatures')
@@ -42,9 +42,9 @@ const Product = ({navigation, route}) => {
                     setUserId(data.userId);
                     fetch(
                       'http://10.0.2.2:8085/cartItem/p/' +
-                        data.userId +
-                        '/' +
-                        result.productId,
+                      data.userId +
+                      '/' +
+                      result.productId,
 
                       {
                         method: 'GET',
@@ -55,6 +55,10 @@ const Product = ({navigation, route}) => {
                         console.log(recieved);
                         if (recieved.length != 0) {
                           setProductStatus('Incart');
+                        } else {
+                          fetch('http://10.0.2.2:8085/cartItem/c/' + recieved[0].cartItemId, {
+                            method: 'DELETE',
+                          })
                         }
                       })
                       .catch(error =>
@@ -118,7 +122,7 @@ const Product = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: ProjectColors.white, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: ProjectColors.white, flex: 1 }}>
       <ProductHeader
         productHeaderNavigation={navigation}
         title={product.productName}></ProductHeader>
@@ -134,12 +138,14 @@ const Product = ({navigation, route}) => {
             alignSelf: 'center',
             backgroundColor: 'white',
             marginTop: 10,
-            borderWidth: 0.5,
+            borderWidth: 0,
+            // borderColor: 'red',
             elevation: 3,
+            padding: 20,
           }}>
           <Image
-            style={{width: 375, height: 400, alignSelf: 'center'}}
-            source={{uri: product.productImageURL}}></Image>
+            style={{ width: 265, height: 360, alignSelf: 'center' }}
+            source={{ uri: product.productImageURL }}></Image>
         </View>
         <View
           style={{
@@ -149,6 +155,7 @@ const Product = ({navigation, route}) => {
             backgroundColor: ProjectColors.mint,
             alignSelf: 'center',
             elevation: 3,
+            padding: 10,
           }}>
           <Text
             style={{
@@ -167,7 +174,7 @@ const Product = ({navigation, route}) => {
               paddingTop: 10,
             }}>
             Brand:{' '}
-            <Text style={{textTransform: 'lowercase'}}>{product.brand}</Text>
+            <Text style={{ textTransform: 'lowercase' }}>{product.brand}</Text>
           </Text>
           <Text
             style={{
@@ -187,7 +194,7 @@ const Product = ({navigation, route}) => {
             marginHorizontal: 10,
             marginBottom: 5,
           }}>
-          <Text style={{color: 'black', fontSize: 20, fontWeight: '450'}}>
+          <Text style={{ color: 'black', fontSize: 20, fontWeight: '450' }}>
             Highlights
           </Text>
           {product.productDescription.split(',').map(feature => {
@@ -199,26 +206,13 @@ const Product = ({navigation, route}) => {
                   marginVertical: 2,
                   flexDirection: 'column',
                 }}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{width: 40, height: 40, alignSelf: 'center'}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ width: 40, height: 40, alignSelf: 'center' }}>
                     <Image
                       styles={styles.searchIcon}
                       source={require('../assets/icons8-tag-window-48.png')}></Image>
                   </View>
-                  <Text style={{fontSize: 15, alignSelf: 'center'}}>
-                    {' '}
-                    {feature}
-                  </Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{width: 40, height: 40, alignSelf: 'center'}}>
-                    <Image
-                      styles={styles.searchIcon}
-                      source={require('../assets/icons8-tag-window-48.png')}></Image>
-                  </View>
-                  <Text style={{fontSize: 15, alignSelf: 'center'}}>
-                    {' '}
-                    {feature}
+                  <Text style={{ fontSize: 15, alignSelf: 'center' }}>     {feature}
                   </Text>
                 </View>
               </View>
@@ -227,39 +221,39 @@ const Product = ({navigation, route}) => {
         </View>
       </ScrollView>
       {productStatus == 'Available' && (
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <TouchableOpacity
             onPress={addToCart}
-            style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
+            style={[styles.button, { backgroundColor: ProjectColors.navy }]}>
             <Text style={styles.buttonText}>Add to cart</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={buyNow}
-            style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+            style={[styles.button, { backgroundColor: ProjectColors.teal }]}>
             <Text style={styles.buttonText}>Buy now</Text>
           </TouchableOpacity>
         </View>
       )}
       {productStatus == 'Unavailable' && (
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <View style={[styles.button, {backgroundColor: ProjectColors.grey}]}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+          <View style={[styles.button, { backgroundColor: ProjectColors.grey }]}>
             <Text style={styles.buttonText}>Out of stock</Text>
           </View>
-          <View style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+          <View style={[styles.button, { backgroundColor: ProjectColors.teal }]}>
             <Text style={styles.buttonText}>Buy now</Text>
           </View>
         </View>
       )}
       {productStatus == 'Incart' && (
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <TouchableOpacity
             onPress={goToCart}
-            style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
+            style={[styles.button, { backgroundColor: ProjectColors.navy }]}>
             <Text style={styles.buttonText}>Go to cart</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={buyNow}
-            style={[styles.button, {backgroundColor: ProjectColors.teal}]}>
+            style={[styles.button, { backgroundColor: ProjectColors.teal }]}>
             <Text style={styles.buttonText}>Buy now</Text>
           </TouchableOpacity>
         </View>
