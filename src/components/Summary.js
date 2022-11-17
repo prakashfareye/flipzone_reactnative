@@ -9,7 +9,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ToastAndroid,
   Platform,
   AlertIOS,
   DrawerLayoutAndroid,
@@ -101,12 +100,14 @@ const Summary = ({navigation, route}) => {
   };
 
   const handlePlaceOrder = () => {
+    if(totalPrice != 0){
     AsyncStorage.removeItem('cartTransaction');
     AsyncStorage.setItem('productTransaction', JSON.stringify(productItem[0]))
       .then(() => navigation.navigate('Transaction'))
       .catch(error =>
         console.log('summary handlePlaceOrder  AsyncStorage error', error),
       );
+    }
   };
 
   const routeBack = () => {
@@ -134,6 +135,9 @@ const Summary = ({navigation, route}) => {
             top: 5,
             left: 5,
             borderWidth: 0.5,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <Image
             style={{width: 150, height: 150}}

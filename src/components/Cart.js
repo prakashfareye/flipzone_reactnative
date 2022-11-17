@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,13 +18,13 @@ import {
   Button,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';
 
-const Cart = ({navigation, route}) => {
+const Cart = ({ navigation, route }) => {
   useEffect(() => {
     console.log('cart');
     AsyncStorage.getItem('user')
@@ -45,6 +45,10 @@ const Cart = ({navigation, route}) => {
                 initialTotalPrice +=
                   element.cartItemQuantity * element.cartItemPrice;
                 initialTotalItems += element.cartItemQuantity;
+              } else {
+                fetch('http://10.0.2.2:8085/cartItem/c/' + data.cartItemId, {
+                  method: 'DELETE',
+                })
               }
             });
 
@@ -156,12 +160,14 @@ const Cart = ({navigation, route}) => {
   };
 
   const handlePlaceOrder = () => {
-    AsyncStorage.removeItem('productTransaction');
-    AsyncStorage.setItem('cartTransaction', JSON.stringify(cartItems))
-      .then(() => navigation.navigate('Transaction'))
-      .catch(error =>
-        console.log('transaction handlePlaceOrder  AsyncStorage error', error),
-      );
+    if (totalPrice != 0) {
+      AsyncStorage.removeItem('productTransaction');
+      AsyncStorage.setItem('cartTransaction', JSON.stringify(cartItems))
+        .then(() => navigation.navigate('Transaction'))
+        .catch(error =>
+          console.log('transaction handlePlaceOrder  AsyncStorage error', error),
+        );
+    }
   };
 
   const routeBack = () => {
@@ -180,7 +186,7 @@ const Cart = ({navigation, route}) => {
       .catch(error => console.log('productCardPress AsyncStorage error'));
   };
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <View>
       {item.cartItemQuantity <= item.product.productQuantity && (
         <TouchableOpacity
@@ -199,11 +205,13 @@ const Cart = ({navigation, route}) => {
               position: 'absolute',
               top: 5,
               left: 5,
-              borderWidth: 0.5,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
             <Image
-              style={{width: 150, height: 150}}
-              source={{uri: item.product.productImageURL}}></Image>
+              style={{ width: 150, height: 150 }}
+              source={{ uri: item.product.productImageURL }}></Image>
           </View>
           <View
             style={{
@@ -230,7 +238,7 @@ const Cart = ({navigation, route}) => {
                 paddingTop: 10,
               }}>
               Brand:{' '}
-              <Text style={{textTransform: 'lowercase'}}>
+              <Text style={{ textTransform: 'lowercase' }}>
                 {item.product.brand}
               </Text>
             </Text>
@@ -262,7 +270,7 @@ const Cart = ({navigation, route}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
               }}>
-              <Text style={{alignSelf: 'center'}}>-</Text>
+              <Text style={{ alignSelf: 'center' }}>-</Text>
             </TouchableOpacity>
             <Text
               style={{
@@ -285,7 +293,7 @@ const Cart = ({navigation, route}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
               }}>
-              <Text style={{alignSelf: 'center'}}>+</Text>
+              <Text style={{ alignSelf: 'center' }}>+</Text>
             </TouchableOpacity>
           </View>
           <Text
@@ -303,7 +311,7 @@ const Cart = ({navigation, route}) => {
         </TouchableOpacity>
       )}
       {index == cartItems.length - 1 && (
-        <View style={{height: 200, backgroundColor: 'white', width: 375}}>
+        <View style={{ height: 200, backgroundColor: 'white', width: 375 }}>
           <Text
             style={{
               color: 'black',
@@ -382,11 +390,11 @@ const Cart = ({navigation, route}) => {
   );
 
   return (
-    <SafeAreaView style={{backgroundColor: ProjectColors.mint, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: ProjectColors.mint, flex: 1 }}>
       <View style={styles.searchBar}>
         <TouchableOpacity
           onPress={routeBack}
-          style={{alignSelf: 'center', paddingLeft: 10}}>
+          style={{ alignSelf: 'center', paddingLeft: 10 }}>
           <View>
             <Image
               styles={styles.searchIcon}
@@ -430,7 +438,7 @@ const Cart = ({navigation, route}) => {
         </Text>
 
         <TouchableOpacity
-          style={[styles.button, {backgroundColor: ProjectColors.navy}]}
+          style={[styles.button, { backgroundColor: ProjectColors.navy }]}
           onPress={handlePlaceOrder}>
           <Text style={styles.buttonText}>Place Order</Text>
         </TouchableOpacity>

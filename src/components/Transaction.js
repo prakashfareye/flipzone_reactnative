@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,11 +17,11 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Transaction = ({route, navigation}) => {
+const Transaction = ({ route, navigation }) => {
   useEffect(() => {
     AsyncStorage.getItem('user')
       .then(userResult => {
@@ -52,6 +52,10 @@ const Transaction = ({route, navigation}) => {
   const [address, setAddress] = useState();
   const [address_id, setAddressId] = useState();
   const [userId, setUserId] = useState();
+
+  function goToHome() {
+    navigation.navigate('Home');
+  }
 
   const handleSubmit = () => {
     fetch('http://10.0.2.2:8085/address/' + address_id, {
@@ -116,6 +120,7 @@ const Transaction = ({route, navigation}) => {
                 })
                   .then(response => response.json())
                   .then(res => {
+                    alert("transaction successful");
                     navigation.navigate('Home');
                   })
                   .catch(error =>
@@ -181,132 +186,133 @@ const Transaction = ({route, navigation}) => {
                           })
                             .then(response => {
                               console.log(response);
-                              navigation.navigate('Home');
-                            })
-
-                            .catch(error =>
-                              console.log(
-                                'get all categories api fail ',
-                                error,
-                              ),
-                            );
-                          // clear cart api hit
+                              alert("transaction successful");
+                              navigation.navigate("Home")
                         })
-                        .catch(error =>
-                          console.log('cart transaction api fail', error),
-                        );
-                    }
-                  })
 
+                        .catch(error =>
+                          console.log(
+                            'get all categories api fail ',
+                            error,
+                          ),
+                        );
+                      // clear cart api hit
+                    })
                   .catch(error =>
-                    console.log('cart AsyncStorage  error', error),
+                    console.log('cart transaction api fail', error),
                   );
               }
-            },
-          );
+            })
+
+            .catch(error =>
+              console.log('cart AsyncStorage  error', error),
+            );
         }
-      })
+      },
+      );
+  }
+})
 
-      .catch(error => console.log('user AsyncStorage  error', error));
-    console.log('Submitting');
+      .catch (error => console.log('user AsyncStorage  error', error));
+console.log('Submitting');
   };
 
-  const handleCancel = () => {
-    console.log('cancel');
-    navigation.goBack();
-  };
+const handleCancel = () => {
+  console.log('cancel');
+  navigation.goBack();
+};
 
-  return (
-    <KeyboardAvoidingView
-      style={{
-        backgroundColor: ProjectColors.white,
-        flex: 1,
-        justifyContent: 'center',
-      }}
-      behavior="height">
-      <View style={styles.viewBox}>
-        <Text style={{padding: 20, fontWeight: 'bold'}}>Address</Text>
+return (
+  <KeyboardAvoidingView
+    style={{
+      backgroundColor: ProjectColors.white,
+      flex: 1,
+      justifyContent: 'center',
+    }}
+    behavior="height">
+    <View style={styles.viewBox}>
+      <Text style={{ padding: 20, fontWeight: 'bold' }}>Address</Text>
+      <TextInput
+        label="address"
+        value={address}
+        style={styles.textInputEmail}
+        placeholder="Address"
+        placeholderTextColor={ProjectColors.grey}
+        onChangeText={text => {
+          setAddress(text);
+        }}
+        multiline
+        numberOfLines={3}
+      />
+      <TextInput
+        label="pincode"
+        value={pincode}
+        style={styles.textInputEmail}
+        placeholder="Pincode"
+        placeholderTextColor={ProjectColors.grey}
+        onChangeText={text => {
+          setPincode(text);
+        }}
+        maxLength={6}
+        keyboardType="numeric"
+      />
+    </View>
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <Text style={{ padding: 20, fontWeight: 'bold' }}>Card Details</Text>
         <TextInput
-          label="address"
-          value={address}
+          label="cardNumber"
           style={styles.textInputEmail}
-          placeholder="Address"
+          placeholder="Card Number"
           placeholderTextColor={ProjectColors.grey}
           onChangeText={text => {
-            setAddress(text);
+            setCardNumber(text);
           }}
-          multiline
-          numberOfLines={3}
+          keyboardType="numeric"
+          maxLength={12}
         />
         <TextInput
-          label="pincode"
-          value={pincode}
+          label="expiry"
           style={styles.textInputEmail}
-          placeholder="Pincode"
+          placeholder="Expiry Date"
           placeholderTextColor={ProjectColors.grey}
           onChangeText={text => {
-            setPincode(text);
+            setExpiryDate(text);
           }}
-          maxLength={6}
           keyboardType="numeric"
         />
-      </View>
-      <View style={{flex: 1}}>
-        <ScrollView>
-          <Text style={{padding: 20, fontWeight: 'bold'}}>Card Details</Text>
-          <TextInput
-            label="cardNumber"
-            style={styles.textInputEmail}
-            placeholder="Card Number"
-            placeholderTextColor={ProjectColors.grey}
-            onChangeText={text => {
-              setCardNumber(text);
-            }}
-            keyboardType="numeric"
-            maxLength={12}
-          />
-          <TextInput
-            label="expiry"
-            style={styles.textInputEmail}
-            placeholder="Expiry Date"
-            placeholderTextColor={ProjectColors.grey}
-            onChangeText={text => {
-              setExpiryDate(text);
-            }}
-            keyboardType="numeric"
-          />
-          <TextInput
-            label="cvv"
-            style={styles.textInputEmail}
-            placeholder="CVV"
-            placeholderTextColor={ProjectColors.grey}
-            onChangeText={text => {
-              setCvv(text);
-            }}
-            keyboardType="numeric"
-            maxLength={3}
-          />
-        </ScrollView>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          paddingBottom: 15,
-        }}>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleCancel}
-          style={[styles.button, {backgroundColor: ProjectColors.navy}]}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
+        <TextInput
+          label="cvv"
+          style={styles.textInputEmail}
+          placeholder="CVV"
+          placeholderTextColor={ProjectColors.grey}
+          onChangeText={text => {
+            setCvv(text);
+          }}
+          keyboardType="numeric"
+          maxLength={3}
+        />
+      </ScrollView>
+    </View>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingBottom: 15,
+      }}>
+      <TouchableOpacity
+        onPress={handleSubmit}
+        style={[styles.button, { backgroundColor: ProjectColors.navy }]}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleCancel}
+        style={[styles.button, { backgroundColor: ProjectColors.navy }]}>
+        <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  </KeyboardAvoidingView>
+);
 };
 
 const styles = StyleSheet.create({

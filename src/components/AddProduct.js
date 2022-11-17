@@ -71,6 +71,7 @@ import {
       setProductImageURL('');
       setProductPrice();
       setProductQuantity();
+      setBrand('');
     };
   
     return (
