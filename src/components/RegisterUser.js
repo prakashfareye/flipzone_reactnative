@@ -76,6 +76,7 @@ const RegisterUser = ({route, navigation}) => {
     setEmailValidError('');
     if (reg.test(text) === false) {
       setEmailValidError('Email is Not Correct');
+     
     } else if (reg.test(text) === true) {
       setEmailValidError('');
       setEmail(text);
@@ -85,13 +86,17 @@ const RegisterUser = ({route, navigation}) => {
   const handleSignUpLoginButtonClick = () => {
     if (signInMode) {
       //sign up
-      signUpUser();
+      
+      if (emailValidError === '' && password.length >= 8) {
+      signUpUser();}
+      else{alert("Invalid Credentials");}
     } else {
       // login
       if (emailValidError === '' && password.length >= 8) {
         // verify user
         loginUser();
       }
+      else{alert("Invalid Credentials");}
     }
   };
 
