@@ -94,6 +94,8 @@ const AddProduct = ({route, navigation}) => {
         productQuantity: productQuantity,
         brand: brand,
       };
+      if(userId==null || categoryId==null || productName=='' || productDescription!='' 
+      || productPrice=='' || productImageURL=='' || productQuantity==null){ alert("invalid details");}else{
       fetch('http://10.0.2.2:8085/product', {
         method: 'POST',
         headers: {
@@ -104,7 +106,7 @@ const AddProduct = ({route, navigation}) => {
         console.log(response.status, response.ok);
         alert('saved');
       });
-    } catch (error) {
+    }} catch (error) {
       alert(error);
     }
     setCategoryId();
