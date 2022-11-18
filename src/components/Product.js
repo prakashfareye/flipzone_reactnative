@@ -76,6 +76,9 @@ const Product = ({ navigation, route }) => {
                             method: 'DELETE',
                           })
                         }
+                        else {
+                          setProductStatus("Available")
+                        }
                       })
                       .catch(error =>
                         console.log('cart productapi fail ', error),
@@ -93,7 +96,7 @@ const Product = ({ navigation, route }) => {
   }, []);
 
   const [userId, setUserId] = useState(0);
-  const [productStatus, setProductStatus] = useState('Available');
+  const [productStatus, setProductStatus] = useState();
   const [cartCount, setcartCount] = useState(0);
 
 
