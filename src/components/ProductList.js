@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -17,20 +17,29 @@ import {
   FlatList,
   Button,
 } from 'react-native';
-import {SearchBar} from 'react-native-elements';
-import {fonts} from 'react-native-elements/dist/config';
+import { SearchBar } from 'react-native-elements';
+import { fonts } from 'react-native-elements/dist/config';
 import ProductHeader from './ProductHeader';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProductList = ({navigation, route}) => {
+const ProductList = ({ navigation, route }) => {
   const drawer = useRef(null);
 
   const [title, setTitle] = useState('');
 
   useEffect(() => {
+    AsyncStorage.getItem('cartCount').then(result => {
+      if (result != undefined) {
+        console.log(result);
+        setcartCount(parseInt(result))
+      }
+    })
+      .catch(error => console.log('ProductListing cartCount AsyncStorage error'));
+
+
     AsyncStorage.getItem('ProductsByCategory')
       .then(result => {
         if (result != undefined) {
@@ -41,6 +50,7 @@ const ProductList = ({navigation, route}) => {
           })
             .then(response => response.json())
             .then(data => {
+              console.log(data)
               setFullProducts(data);
               setProducts(data);
             })
@@ -81,7 +91,7 @@ const ProductList = ({navigation, route}) => {
         width: 200,
       }}>
       {!isSort && (
-        <View style={{justifyContent: 'space-evenly', flexDirection: 'column'}}>
+        <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
           <TouchableOpacity
             onPress={() => typePress(1)}
             style={{
@@ -122,7 +132,7 @@ const ProductList = ({navigation, route}) => {
         </View>
       )}
       {isSort && (
-        <View style={{justifyContent: 'space-evenly', flexDirection: 'column'}}>
+        <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
           <TouchableOpacity
             onPress={() => typePress(1)}
             style={{
@@ -168,6 +178,7 @@ const ProductList = ({navigation, route}) => {
   const [isSort, setIsSort] = useState(true);
   const [sortBy, setSortBy] = useState(0);
   const [filterBy, setFilterBy] = useState(0);
+  const [cartCount, setcartCount] = useState(0);
   const [fullProducts, setFullProducts] = useState([
     // {
     //   productId: 1,
@@ -329,7 +340,7 @@ const ProductList = ({navigation, route}) => {
 
   const keyExtractor = item => item.productId;
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <View>
       <TouchableOpacity
         onPress={() => productCardPress(index)}
@@ -358,7 +369,7 @@ const ProductList = ({navigation, route}) => {
               width: 120,
               height: 180,
             }}
-            source={{uri: item.productImageURL}}></Image>
+            source={{ uri: item.productImageURL }}></Image>
         </View>
         <View
           style={{
@@ -385,7 +396,7 @@ const ProductList = ({navigation, route}) => {
               paddingTop: 10,
             }}>
             Brand:{' '}
-            <Text style={{textTransform: 'lowercase'}}>{item.brand}</Text>
+            <Text style={{ textTransform: 'lowercase' }}>{item.brand}</Text>
           </Text>
           <Text
             style={{
@@ -403,8 +414,9 @@ const ProductList = ({navigation, route}) => {
   );
 
   return (
-    <SafeAreaView style={{backgroundColor: ProjectColors.mint, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: ProjectColors.mint, flex: 1 }}>
       <ProductHeader
+        cartCount={cartCount}
         productHeaderNavigation={navigation}
         title={title}></ProductHeader>
       <DrawerLayoutAndroid

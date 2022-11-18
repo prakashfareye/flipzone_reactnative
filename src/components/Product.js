@@ -25,10 +25,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Product = ({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      AsyncStorage.getItem('cartCount').then(result => {
+        if (result != undefined) {
+          console.log(result);
+          setcartCount(parseInt(result))
+        }
+      })
+        .catch(error => console.log('Product cartCount AsyncStorage error'));
+
       AsyncStorage.getItem('ProductFeatures')
         .then(result => {
           if (result != undefined) {
             result = JSON.parse(result);
+            console.log(result)
             setProduct(result);
             console.log(result.productQuantity);
             if (result.productQuantity == 0) {
@@ -52,10 +61,17 @@ const Product = ({ navigation, route }) => {
                     )
                       .then(recieved => recieved.json())
                       .then(recieved => {
-                        console.log(recieved);
-                        if (recieved.length != 0) {
+                        console.log(product);
+                        if (recieved.length != 0 && result.productQuantity >= recieved[0].cartItemQuantity) {
+                          console.log("recieved", recieved)
                           setProductStatus('Incart');
-                        } else {
+                        } else if (recieved.length != 0 && result.productQuantity < recieved[0].cartItemQuantity) {
+                          updatedCartCount = cartCount - recieved[0].cartItemQuantity
+                          setcartCount(updatedCartCount)
+                          AsyncStorage.setItem('cartCount', updatedCartCount.toString())
+                            .catch(error =>
+                              console.log('product set cartCount AsyncStorage error', error),
+                            );
                           fetch('http://10.0.2.2:8085/cartItem/c/' + recieved[0].cartItemId, {
                             method: 'DELETE',
                           })
@@ -78,6 +94,8 @@ const Product = ({ navigation, route }) => {
 
   const [userId, setUserId] = useState(0);
   const [productStatus, setProductStatus] = useState('Available');
+  const [cartCount, setcartCount] = useState(0);
+
 
   const [product, setProduct] = useState({
     productId: 1,
@@ -111,6 +129,12 @@ const Product = ({ navigation, route }) => {
     })
       .then(response => response.json())
       .then(res => {
+        updatedCartCount = cartCount + 1
+        setcartCount(updatedCartCount)
+        AsyncStorage.setItem('cartCount', updatedCartCount.toString())
+          .catch(error =>
+            console.log('product set cartCount AsyncStorage error', error),
+          );
         console.log(res);
         setProductStatus('Incart');
       })
@@ -124,6 +148,7 @@ const Product = ({ navigation, route }) => {
   return (
     <SafeAreaView style={{ backgroundColor: ProjectColors.white, flex: 1 }}>
       <ProductHeader
+        cartCount={cartCount}
         productHeaderNavigation={navigation}
         title={product.productName}></ProductHeader>
       <ScrollView

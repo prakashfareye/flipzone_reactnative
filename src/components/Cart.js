@@ -46,14 +46,19 @@ const Cart = ({ navigation, route }) => {
                   element.cartItemQuantity * element.cartItemPrice;
                 initialTotalItems += element.cartItemQuantity;
               } else {
-                fetch('http://10.0.2.2:8085/cartItem/c/' + data.cartItemId, {
+                console.log(data)
+                fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
                   method: 'DELETE',
-                })
+                }).then(response => console.log(response))
               }
             });
 
             setTotalPrice(initialTotalPrice);
             setTotalItems(initialTotalItems);
+            AsyncStorage.setItem('cartCount', initialTotalItems.toString())
+              .catch(error =>
+                console.log('cart set cartCount AsyncStorage error', error),
+              );
           })
           .catch(error => console.log('get all categories api fail ', error));
       })
@@ -106,6 +111,10 @@ const Cart = ({ navigation, route }) => {
           setcartItems(updatedCartItems);
           setTotalPrice(updatedTotalPrice);
           setTotalItems(updatedTotalItems);
+          AsyncStorage.setItem('cartCount', updatedTotalItems.toString())
+            .catch(error =>
+              console.log('Cart set cartCount AsyncStorage error', error),
+            );
         })
         .catch(error => console.log('increase count api fail ', error));
     }
@@ -132,6 +141,10 @@ const Cart = ({ navigation, route }) => {
           setcartItems(updatedCartItems);
           setTotalPrice(updatedTotalPrice);
           setTotalItems(updatedTotalItems);
+          AsyncStorage.setItem('cartCount', updatedTotalItems.toString())
+            .catch(error =>
+              console.log('Cart set cartCount AsyncStorage error', error),
+            );
         })
         .catch(error => console.log('increase count api fail ', error));
     }
@@ -156,6 +169,10 @@ const Cart = ({ navigation, route }) => {
       setcartItems(updatedCartItems);
       setTotalPrice(updatedTotalPrice);
       setTotalItems(updatedTotalItems);
+      AsyncStorage.setItem('cartCount', updatedTotalItems.toString())
+        .catch(error =>
+          console.log('Cart set cartCount AsyncStorage error', error),
+        );
     });
   };
 
@@ -444,6 +461,7 @@ const Cart = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <Footer
+        cartCount={totalItems}
         productHeaderNavigation={navigation}
         currentScreen="Cart"></Footer>
     </SafeAreaView>
