@@ -1,4 +1,4 @@
-import React, {useState, useEffect, componentDidMount} from 'react';
+import React, { useState, useEffect, componentDidMount } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,25 +16,58 @@ import {
   FlatList,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';
 
-const Home = ({navigation, route}) => {
+const Home = ({ navigation, route }) => {
   useEffect(() => {
-    // AsyncStorage.setItem('user', JSON.stringify({
-    //     "userId": 1,
-    //     "userName": "Prakash Ranjan",
-    //     "userEmailId" : "p2@gmail.com",
-    //     "password": "abcd",
-    //     "role":"ROLE_USER"
-    // }))
-    // .then(json => console.log('User Detail Saving success!'))
-    // .catch(error => console.log('User Detail Saving error!'));
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('home');
 
-    console.log('home');
+    AsyncStorage.getItem('user')
+      .then(result => {
+        result = JSON.parse(result);
+        AsyncStorage.getItem('cartCount').then(result => {
+          if (result != undefined) {
+            console.log(result);
+            setcartCount(parseInt(result))
+          } else {
+            console.log("not in async storage")
+            fetch('http://10.0.2.2:8085/cartItem/u/' + result.userId, {
+              method: 'GET',
+            })
+              .then(response => response.json())
+              .then(data => {
+                let initialTotalItems = 0;
+                data.forEach(element => {
+                  if (element.cartItemQuantity <= element.product.productQuantity) {
+                    initialTotalItems += element.cartItemQuantity;
+                  } else {
+                    console.log(data)
+                    fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
+                      method: 'DELETE',
+                    }).then(response => console.log(response))
+                  }
+                });
+
+                setcartCount(initialTotalItems);
+                AsyncStorage.setItem('cartCount', initialTotalItems.toString())
+                  .catch(error =>
+                    console.log('home cartCount AsyncStorage error', error),
+                  );
+              })
+              .catch(error => console.log('get all categories api fail ', error));
+          }
+        })
+          .catch(error => console.log('Hone get cartCount AsyncStorage error'));
+
+
+      })
+      .catch(error => console.log('Product AsyncStorage  error'));
+
     fetch('http://10.0.2.2:8085/category', {
       method: 'GET',
     })
@@ -58,11 +91,15 @@ const Home = ({navigation, route}) => {
         setTopProducts(data);
       })
       .catch(error => console.log('get top products api fail ', error));
+    })
+    
   }, []);
 
   const [topProducts, setTopProducts] = useState([]);
 
   const [topProductImages, setTopProductImages] = useState([]);
+
+  const [cartCount, setcartCount] = useState(0);
 
   const [productCategories, setProductCategories] = useState([
     {
@@ -107,10 +144,10 @@ const Home = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: ProjectColors.mint}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: ProjectColors.mint }}>
       <View style={styles.defaultStyle}>
         <TouchableOpacity onPress={searchBarPress} style={styles.searchBar}>
-          <View style={{position: 'absolute', bottom: 6, right: 315}}>
+          <View style={{ position: 'absolute', bottom: 6, right: 315 }}>
             <Image
               styles={styles.searchIcon}
               source={require('../assets/icons8-search-30.png')}></Image>
@@ -122,15 +159,15 @@ const Home = ({navigation, route}) => {
               bottom: 6,
               right: 65,
             }}>
-            <Text style={{color: 'grey', alignSelf: 'center'}}>
+            <Text style={{ color: 'grey', alignSelf: 'center' }}>
               Please enter product name
             </Text>
           </View>
         </TouchableOpacity>
       </View>
-      <ScrollView style={{flexDirection: 'column'}}>
+      <ScrollView style={{ flexDirection: 'column' }}>
         <ScrollView
-          style={{height: 300}}
+          style={{ marginTop: 10 }}
           horizontal={true}
           scrollEventThrottle={16}
           pagingEnabled={true}>
@@ -138,13 +175,18 @@ const Home = ({navigation, route}) => {
             return (
               <TouchableOpacity
                 onPress={() => topProductPress(index)}
+                style={{}}
                 key={index}
                 delayPressIn={70}>
                 <View
-                  style={{width: 393, height: 300, backgroundColor: 'white'}}>
+                  style={{
+                    width: 300, backgroundColor: ProjectColors.navy, margin: 4, display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center', padding: 5
+                  }}>
                   <Image
-                    style={{width: '100%', height: undefined, aspectRatio: 1}}
-                    source={{uri: image}}></Image>
+                    style={{ width: '100%', height: undefined, aspectRatio: 1 }}
+                    source={{ uri: image }}></Image>
                 </View>
               </TouchableOpacity>
             );
@@ -156,7 +198,7 @@ const Home = ({navigation, route}) => {
             return (
               <View
                 key={index}
-                style={{flexDirection: 'row', alignSelf: 'center'}}>
+                style={{ flexDirection: 'row', alignSelf: 'center' }}>
                 <TouchableOpacity
                   onPress={() => productCategoryPress(index)}
                   delayPressIn={70}
@@ -170,10 +212,10 @@ const Home = ({navigation, route}) => {
                     backgroundColor: ProjectColors.white,
                     elevation: 3,
                   }}>
-                  <View style={{width: 170, height: 170, alignSelf: 'center'}}>
+                  <View style={{ width: 170, height: 170, alignSelf: 'center' }}>
                     <Image
-                      style={{width: 170, height: 170}}
-                      source={{uri: item.productCategoryImageURL}}></Image>
+                      style={{ width: 170, height: 170 }}
+                      source={{ uri: item.productCategoryImageURL }}></Image>
                   </View>
 
                   <Text
@@ -198,9 +240,9 @@ const Home = ({navigation, route}) => {
                     backgroundColor: ProjectColors.white,
                     elevation: 3,
                   }}>
-                  <View style={{width: 170, height: 170, alignSelf: 'center'}}>
+                  <View style={{ width: 170, height: 170, alignSelf: 'center' }}>
                     <Image
-                      style={{width: 170, height: 170}}
+                      style={{ width: 170, height: 170 }}
                       source={{
                         uri: productCategories[index + 1]
                           .productCategoryImageURL,
@@ -220,7 +262,7 @@ const Home = ({navigation, route}) => {
             );
           } else if (index % 2 == 0 && index + 1 == productCategories.length) {
             return (
-              <View key={index} style={{flexDirection: 'row', marginLeft: 5}}>
+              <View key={index} style={{ flexDirection: 'row', marginLeft: 5 }}>
                 <TouchableOpacity
                   onPress={() => productCategoryPress(index)}
                   delayPressIn={70}
@@ -234,10 +276,10 @@ const Home = ({navigation, route}) => {
                     backgroundColor: ProjectColors.white,
                     elevation: 3,
                   }}>
-                  <View style={{width: 170, height: 170, alignSelf: 'center'}}>
+                  <View style={{ width: 170, height: 170, alignSelf: 'center' }}>
                     <Image
-                      style={{width: 170, height: 170}}
-                      source={{uri: item.productCategoryImageURL}}></Image>
+                      style={{ width: 170, height: 170 }}
+                      source={{ uri: item.productCategoryImageURL }}></Image>
                   </View>
 
                   <Text
@@ -255,6 +297,7 @@ const Home = ({navigation, route}) => {
         })}
       </ScrollView>
       <Footer
+        cartCount={cartCount}
         productHeaderNavigation={navigation}
         currentScreen="Home"></Footer>
     </SafeAreaView>

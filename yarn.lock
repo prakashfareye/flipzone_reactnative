@@ -6642,6 +6642,11 @@
   "resolved" "https://registry.npmjs.org/react-native-element-dropdown/-/react-native-element-dropdown-2.4.0.tgz"
   "version" "2.4.0"
 
+"react-native-flatlist-slider@^1.0.6":
+  "integrity" "sha512-F1C87eGIte9nfBU/MyNI6OOVKR/uCwFMrjVGv2j5u0LZjBm2WoEso96kPF2j0PIG8+XerD7Y2pmtGdCMCWxtcA=="
+  "resolved" "https://registry.npmjs.org/react-native-flatlist-slider/-/react-native-flatlist-slider-1.0.6.tgz"
+  "version" "1.0.6"
+
 "react-native-gesture-handler@^2.8.0", "react-native-gesture-handler@>= 1.0.0":
   "integrity" "sha512-poOSfz/w0IyD6Qwq7aaIRRfEaVTl1ecQFoyiIbpOpfNTjm2B1niY2FLrdVQIOtIOe+K9nH55Qal04nr4jGkHdQ=="
   "resolved" "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.8.0.tgz"

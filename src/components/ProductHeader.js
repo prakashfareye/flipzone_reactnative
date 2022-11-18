@@ -72,6 +72,10 @@ const ProductHeader = props => {
             source={require('../assets/icons8-shopping-cart-30.png')}></Image>
         </View>
       </TouchableOpacity>
+      <View style={{ width: 25, height: 25, borderRadius: 12.5, backgroundColor: "red", alignItems: "center", position: "absolute", right: 20, top: 1, flexDirection: "column", justifyContent: "space-evenly"}}>
+            <Text style={{color: "white", alignSelf: "center"}}>{props.cartCount}</Text>
+
+          </View>
     </View>
   );
 };

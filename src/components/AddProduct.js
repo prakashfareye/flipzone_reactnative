@@ -113,7 +113,9 @@ const AddProduct = ({route, navigation}) => {
     setProductImageURL('');
     setProductPrice();
     setProductQuantity();
+    setBrand('');
   };
+
 
   return (
     <ScrollView>

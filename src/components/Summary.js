@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,7 +9,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ToastAndroid,
   Platform,
   AlertIOS,
   DrawerLayoutAndroid,
@@ -18,31 +17,42 @@ import {
   Button,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';
 
-const Summary = ({navigation, route}) => {
+const Summary = ({ navigation, route }) => {
   useEffect(() => {
-    console.log('summary');
-    AsyncStorage.getItem('ProductFeatures')
-      .then(result => {
-        result = JSON.parse(result);
-        result.productItemCount = 1;
-        initialTotalPrice = result.productPrice * result.productItemCount;
-        initialTotalItems = result.productItemCount;
-
-        setTotalPrice(initialTotalPrice);
-        setTotalItems(initialTotalItems);
-        setProductItem([result]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('summary');
+      AsyncStorage.getItem('cartCount').then(result => {
+        if (result != undefined) {
+          console.log(result);
+          setcartCount(parseInt(result))
+        }
       })
-      .catch(error => console.log('Product AsyncStorage  error'));
+        .catch(error => console.log('summary cartCount AsyncStorage error'));
+      AsyncStorage.getItem('ProductFeatures')
+        .then(result => {
+          result = JSON.parse(result);
+          result.productItemCount = 1;
+          initialTotalPrice = result.productPrice * result.productItemCount;
+          initialTotalItems = result.productItemCount;
+
+          setTotalPrice(initialTotalPrice);
+          setTotalItems(initialTotalItems);
+          setProductItem([result]);
+        })
+        .catch(error => console.log('Product AsyncStorage  error'));
+    })
+
   }, []);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalItems, setTotalItems] = useState(1);
+  const [cartCount, setcartCount] = useState(0)
   const [productItem, setProductItem] = useState([
     {
       productId: 1,
@@ -101,12 +111,14 @@ const Summary = ({navigation, route}) => {
   };
 
   const handlePlaceOrder = () => {
-    AsyncStorage.removeItem('cartTransaction');
-    AsyncStorage.setItem('productTransaction', JSON.stringify(productItem[0]))
-      .then(() => navigation.navigate('Transaction'))
-      .catch(error =>
-        console.log('summary handlePlaceOrder  AsyncStorage error', error),
-      );
+    if (totalPrice != 0) {
+      AsyncStorage.removeItem('cartTransaction');
+      AsyncStorage.setItem('productTransaction', JSON.stringify(productItem[0]))
+        .then(() => navigation.navigate('Transaction'))
+        .catch(error =>
+          console.log('summary handlePlaceOrder  AsyncStorage error', error),
+        );
+    }
   };
 
   const routeBack = () => {
@@ -115,7 +127,7 @@ const Summary = ({navigation, route}) => {
 
   const keyExtractor = item => item.productId;
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <View>
       <TouchableOpacity
         onPress={productCardPress}
@@ -134,10 +146,13 @@ const Summary = ({navigation, route}) => {
             top: 5,
             left: 5,
             borderWidth: 0.5,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <Image
-            style={{width: 150, height: 150}}
-            source={{uri: item.productImageURL}}></Image>
+            style={{ width: 150, height: 150 }}
+            source={{ uri: item.productImageURL }}></Image>
         </View>
         <View
           style={{
@@ -164,7 +179,7 @@ const Summary = ({navigation, route}) => {
               paddingTop: 10,
             }}>
             Brand:{' '}
-            <Text style={{textTransform: 'lowercase'}}>{item.brand}</Text>
+            <Text style={{ textTransform: 'lowercase' }}>{item.brand}</Text>
           </Text>
           <Text
             style={{
@@ -194,7 +209,7 @@ const Summary = ({navigation, route}) => {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}>
-            <Text style={{alignSelf: 'center'}}>-</Text>
+            <Text style={{ alignSelf: 'center' }}>-</Text>
           </TouchableOpacity>
           <Text
             style={{
@@ -220,7 +235,7 @@ const Summary = ({navigation, route}) => {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}>
-            <Text style={{alignSelf: 'center'}}>+</Text>
+            <Text style={{ alignSelf: 'center' }}>+</Text>
           </TouchableOpacity>
         </View>
         <Text
@@ -237,7 +252,7 @@ const Summary = ({navigation, route}) => {
         </Text>
       </TouchableOpacity>
       {index == productItem.length - 1 && (
-        <View style={{height: 200, backgroundColor: 'white'}}>
+        <View style={{ height: 200, backgroundColor: 'white' }}>
           <Text
             style={{
               color: 'black',
@@ -316,11 +331,11 @@ const Summary = ({navigation, route}) => {
   );
 
   return (
-    <SafeAreaView style={{backgroundColor: ProjectColors.mint, flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: ProjectColors.mint, flex: 1 }}>
       <View style={styles.searchBar}>
         <TouchableOpacity
           onPress={routeBack}
-          style={{alignSelf: 'center', paddingLeft: 10}}>
+          style={{ alignSelf: 'center', paddingLeft: 10 }}>
           <View>
             <Image
               styles={styles.searchIcon}
@@ -364,12 +379,13 @@ const Summary = ({navigation, route}) => {
         </Text>
 
         <TouchableOpacity
-          style={[styles.button, {backgroundColor: ProjectColors.navy}]}
+          style={[styles.button, { backgroundColor: ProjectColors.navy }]}
           onPress={handlePlaceOrder}>
           <Text style={styles.buttonText}>Place Order</Text>
         </TouchableOpacity>
       </View>
       <Footer
+        cartCount={cartCount}
         productHeaderNavigation={navigation}
         currentScreen="Summary"></Footer>
     </SafeAreaView>

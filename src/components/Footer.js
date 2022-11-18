@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,7 +16,7 @@ import {
   FlatList,
 } from 'react-native';
 
-import {ProjectColors} from './colors/ProjectColors';
+import { ProjectColors } from './colors/ProjectColors';
 
 const Footer = props => {
   const homePress = () => {
@@ -40,7 +40,7 @@ const Footer = props => {
   return (
     <View style={styles.defaultStyle}>
       <TouchableOpacity onPress={homePress} style={styles.searchBar}>
-        <View style={{position: 'absolute', left: 22, top: 0}}>
+        <View style={{ position: 'absolute', left: 22, top: 0 }}>
           <Image
             styles={styles.searchIcon}
             source={require('../assets/icons8-home-page-32.png')}></Image>
@@ -56,7 +56,7 @@ const Footer = props => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={accountPress} style={styles.searchBar}>
-        <View style={{position: 'absolute', left: 22, top: 0}}>
+        <View style={{ position: 'absolute', left: 22, top: 0 }}>
           <Image
             styles={styles.searchIcon}
             source={require('../assets/user.png')}></Image>
@@ -73,7 +73,7 @@ const Footer = props => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={cartPress} style={styles.searchBar}>
-        <View style={{position: 'absolute', left: 22, top: 0}}>
+        <View style={{ position: 'absolute', left: 22, top: 0 }}>
           <Image
             styles={styles.searchIcon}
             source={require('../assets/cart.png')}></Image>
@@ -88,6 +88,10 @@ const Footer = props => {
           Cart
         </Text>
       </TouchableOpacity>
+      <View style={{ width: 25, height: 25, borderRadius: 12.5, backgroundColor: "red", alignItems: "center", position: "absolute", right: 50, top: 1, flexDirection: "column", justifyContent: "space-evenly"}}>
+            <Text style={{color: "white", alignSelf: "center"}}>{props.cartCount}</Text>
+
+          </View>
     </View>
   );
 };
