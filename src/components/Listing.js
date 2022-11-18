@@ -95,6 +95,7 @@ const Listing = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.sectionView}>
         <View>
           <Text style={styles.headerText}>{`Hello, ${user.userName}`}</Text>
@@ -176,6 +177,7 @@ const Listing = ({route, navigation}) => {
           </TouchableHighlight>
         </View>
       </View>
+       </TouchableWithoutFeedback>
     </View>
   );
 };
