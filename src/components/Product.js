@@ -222,7 +222,7 @@ const Product = ({ navigation, route }) => {
           <Text style={{ color: 'black', fontSize: 20, fontWeight: '450' }}>
             Highlights
           </Text>
-          {product.productDescription.split(',').map(feature => {
+          {product.productDescription != undefined && product.productDescription.split(',').map(feature => {
             return (
               <View
                 key={feature}

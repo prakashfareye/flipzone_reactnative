@@ -26,43 +26,46 @@ import Footer from './Footer';
 
 const Cart = ({ navigation, route }) => {
   useEffect(() => {
-    console.log('cart');
-    AsyncStorage.getItem('user')
-      .then(result => {
-        result = JSON.parse(result);
-        console.log(result.userId);
-        fetch('http://10.0.2.2:8085/cartItem/u/' + result.userId, {
-          method: 'GET',
-        })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            setcartItems(data);
-            let initialTotalPrice = 0;
-            let initialTotalItems = 0;
-            data.forEach(element => {
-              if (element.cartItemQuantity <= element.product.productQuantity) {
-                initialTotalPrice +=
-                  element.cartItemQuantity * element.cartItemPrice;
-                initialTotalItems += element.cartItemQuantity;
-              } else {
-                console.log(data)
-                fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
-                  method: 'DELETE',
-                }).then(response => console.log(response))
-              }
-            });
-
-            setTotalPrice(initialTotalPrice);
-            setTotalItems(initialTotalItems);
-            AsyncStorage.setItem('cartCount', initialTotalItems.toString())
-              .catch(error =>
-                console.log('cart set cartCount AsyncStorage error', error),
-              );
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('cart');
+      AsyncStorage.getItem('user')
+        .then(result => {
+          result = JSON.parse(result);
+          console.log(result.userId);
+          fetch('http://10.0.2.2:8085/cartItem/u/' + result.userId, {
+            method: 'GET',
           })
-          .catch(error => console.log('get all categories api fail ', error));
-      })
-      .catch(error => console.log('Product AsyncStorage  error'));
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              setcartItems(data);
+              let initialTotalPrice = 0;
+              let initialTotalItems = 0;
+              data.forEach(element => {
+                if (element.cartItemQuantity <= element.product.productQuantity) {
+                  initialTotalPrice +=
+                    element.cartItemQuantity * element.cartItemPrice;
+                  initialTotalItems += element.cartItemQuantity;
+                } else {
+                  console.log(data)
+                  fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
+                    method: 'DELETE',
+                  }).then(response => console.log(response))
+                }
+              });
+
+              setTotalPrice(initialTotalPrice);
+              setTotalItems(initialTotalItems);
+              AsyncStorage.setItem('cartCount', initialTotalItems.toString())
+                .catch(error =>
+                  console.log('cart set cartCount AsyncStorage error', error),
+                );
+            })
+            .catch(error => console.log('get all categories api fail ', error));
+        })
+        .catch(error => console.log('Product AsyncStorage  error'));
+    })
+
   }, []);
 
   const [totalPrice, setTotalPrice] = useState(0);

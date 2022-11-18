@@ -24,24 +24,27 @@ import { RotateInDownLeft } from 'react-native-reanimated';
 
 const Transaction = ({ route, navigation }) => {
   useEffect(() => {
-    AsyncStorage.getItem('user')
-      .then(userResult => {
-        userResult = JSON.parse(userResult);
-        console.log('Before Address ..........', userResult);
-        if (userResult != undefined) {
-          fetch('http://10.0.2.2:8085/address/u/' + userResult.userId, {
-            method: 'GET',
-          })
-            .then(response => response.json())
-            .then(data => {
-
-              setUserId(userResult.userId)
-              setAddressList(data)
+    const unsubscribe = navigation.addListener('focus', () => {
+      AsyncStorage.getItem('user')
+        .then(userResult => {
+          userResult = JSON.parse(userResult);
+          console.log('Before Address ..........', userResult);
+          if (userResult != undefined) {
+            fetch('http://10.0.2.2:8085/address/u/' + userResult.userId, {
+              method: 'GET',
             })
-            .catch(error => console.log('get address api fail ', error));
-        }
-      })
-      .catch(error => console.log('User get async error!'));
+              .then(response => response.json())
+              .then(data => {
+
+                setUserId(userResult.userId)
+                setAddressList(data)
+              })
+              .catch(error => console.log('get address api fail ', error));
+          }
+        })
+        .catch(error => console.log('User get async error!'));
+    })
+
   }, []);
 
   const [cardNumber, setCardNumber] = useState();
