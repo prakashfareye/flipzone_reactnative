@@ -14,7 +14,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Listing = ({route, navigation}) => {
-  const [searchToggle, setSearchToggle] = useState();
+  const [sortToggle, setSortToggle] = useState(true);
   const [list, setList] = useState([]);
   const [filterby, setFilterBy] = useState('');
   const [filterData, setFilterData] = useState([]);
@@ -83,6 +83,16 @@ const Listing = ({route, navigation}) => {
     setFilterBy(text);
   };
 
+  const sortHandler=()=>{
+    if(sortToggle)
+    { filterData.sort((a,b)=>b.productPrice-a.productPrice);
+      setSortToggle(!sortToggle);}
+    else{
+      filterData.sort((a,b)=>a.productPrice-b.productPrice);
+      setSortToggle(!sortToggle)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.sectionView}>
@@ -109,6 +119,16 @@ const Listing = ({route, navigation}) => {
             <Image
               style={styles.image}
               source={require('../assets/search.png')}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={
+             sortHandler
+            }>
+            <Image
+              style={[styles.image,{height:30,width:30}]}
+              source={require('../assets/sort.png')}
             />
           </TouchableOpacity>
         </View>
