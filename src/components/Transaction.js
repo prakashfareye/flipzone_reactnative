@@ -94,6 +94,7 @@ const Transaction = ({ route, navigation }) => {
   }
 
   const handleSubmit = () => {
+
     if (addresssSelected == undefined) {
       alert("Please select address");
 
@@ -440,6 +441,7 @@ const Transaction = ({ route, navigation }) => {
           style={styles.textInputEmail}
           placeholder="CVV"
           placeholderTextColor={ProjectColors.grey}
+          secureTextEntry={true}
           onChangeText={text => {
             setCvv(text);
           }}
