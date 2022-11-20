@@ -21,6 +21,8 @@ import { SearchBar } from 'react-native-elements';
 import { fonts } from 'react-native-elements/dist/config';
 import ProductHeader from './ProductHeader';
 
+import { IP } from './AndroidIP'
+
 import { ProjectColors } from './colors/ProjectColors';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,7 +47,7 @@ const ProductList = ({ navigation, route }) => {
         if (result != undefined) {
           result = JSON.parse(result);
           setTitle(result.productCategoryName);
-          fetch('http://10.0.2.2:8085/product/c/' + result.productCategoryId, {
+          fetch(`http://${IP}:8085/product/c/` + result.productCategoryId, {
             method: 'GET',
           })
             .then(response => response.json())
@@ -61,7 +63,7 @@ const ProductList = ({ navigation, route }) => {
             if (result != undefined) {
               console.log(result);
               setTitle(result);
-              fetch('http://10.0.2.2:8085/product/search/' + result, {
+              fetch(`http://${IP}:8085/product/search/` + result, {
                 method: 'GET',
               })
                 .then(response => response.json())

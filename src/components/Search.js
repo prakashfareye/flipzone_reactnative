@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 
+import { IP } from './AndroidIP'
 import {ProjectColors} from './colors/ProjectColors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -38,7 +39,7 @@ const Search = ({navigation, route}) => {
 
   const handleSearchText = text => {
     setSearchText(text);
-    fetch('http://10.0.2.2:8085/product/search/' + text, {
+    fetch(`http://${IP}:8085/product/search/` + text, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -46,15 +47,7 @@ const Search = ({navigation, route}) => {
         setFilterProducts(data);
       })
       .catch(error => console.log('get similarProducts api fail ', error));
-    // setFilterProducts([
-    //     {
-    //         "productId": 1,
-    //         "productName": "shoes",
-    //         "retailer": "retailer",
-    //         "productImageURL": "https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png",
-    //         "productPrice": 30000,
-    //         "productDescription": "key feature 1,key feature 2222222,key feature 353434353"
-    // }])
+
   };
 
   const [filterProducts, setFilterProducts] = useState([]);

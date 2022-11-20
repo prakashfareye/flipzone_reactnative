@@ -19,6 +19,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import { Ip } from './AndroidIP'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';

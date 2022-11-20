@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import { IP } from './AndroidIP'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProjectColors} from './colors/ProjectColors';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -96,7 +97,7 @@ const AddProduct = ({route, navigation}) => {
       };
       if(userId==null || categoryId==null || productName=='' || productDescription!='' 
       || productPrice=='' || productImageURL=='' || productQuantity==null){ alert("invalid details");}else{
-      fetch('http://10.0.2.2:8085/product', {
+      fetch(`http://${IP}:8085/product`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

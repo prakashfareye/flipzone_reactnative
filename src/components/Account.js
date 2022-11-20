@@ -18,6 +18,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import { IP } from './AndroidIP'
+
 import Footer from './Footer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,7 +42,7 @@ const Account = ({ navigation, route }) => {
           setEmail(res.userEmailId)
           setName(res.userName)
           setRole(res.role)
-          fetch('http://10.0.2.2:8085/order/u/' + res.userId, {
+          fetch(`http://${IP}:8085/order/u/` + res.userId, {
             method: 'GET',
           })
             .then(response => response.json())
@@ -194,7 +196,7 @@ const Account = ({ navigation, route }) => {
           })
         }
       </ScrollView>
-      <TouchableOpacity onPress={logOutPress} style={[styles.userButton, { backgroundColor: ProjectColors.navy }]}>
+      <TouchableOpacity onPress={logOutPress} style={[styles.userButton, { backgroundColor: "red" }]}>
         <Text style={styles.userButtonText}>LOG OUT</Text>
       </TouchableOpacity>
       <Footer cartCount={cartCount} productHeaderNavigation={navigation} currentScreen="Account"></Footer>
