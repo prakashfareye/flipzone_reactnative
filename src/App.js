@@ -29,9 +29,10 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import OrderDetails from './components/OrderDetails';
 import Home from './components/Home';
 import Search from './components/Search';
 import ProductList from './components/ProductList';
@@ -54,52 +55,57 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Search"
           component={Search}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="ProductList"
           component={ProductList}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Product"
           component={Product}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Cart"
           component={Cart}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Account"
           component={Account}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Summary"
           component={Summary}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Transaction"
           component={Transaction}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderDetails"
+          component={OrderDetails}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Registration Page"
           component={RegisterUser}
-          options={{header: () => null}}
+          options={{ header: () => null }}
         />
         <Stack.Screen
           name="My Listing"
           component={Listing}
-          options={({navigation}) => ({
+          options={({ navigation }) => ({
             headerBackVisible: false,
             headerRight: () => (
               <View>

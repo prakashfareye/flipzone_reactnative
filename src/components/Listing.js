@@ -35,6 +35,7 @@ const Listing = ({route, navigation}) => {
             fetch(`http://${IP}:8085/product/u/${result.userId}`)
               .then(response => response.json())
               .then(responseJson => {
+                console.log(responseJson)
                 setFilterData(responseJson);
                 setList(responseJson);
               })

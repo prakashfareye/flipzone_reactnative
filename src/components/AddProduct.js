@@ -95,7 +95,8 @@ const AddProduct = ({route, navigation}) => {
         productQuantity: productQuantity,
         brand: brand,
       };
-      if(userId==null || categoryId==null || productName=='' || productDescription!='' 
+      console.log(data)
+      if(userId==null || categoryId==null || productName=='' || productDescription=='' 
       || productPrice=='' || productImageURL=='' || productQuantity==null){ alert("invalid details");}else{
       fetch(`http://${IP}:8085/product`, {
         method: 'POST',

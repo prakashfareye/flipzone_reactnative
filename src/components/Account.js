@@ -48,18 +48,14 @@ const Account = ({ navigation, route }) => {
             .then(response => response.json())
             .then(data => {
               console.log(data)
-              let initialOrderItems = []
               data.forEach(order => {
-                if (order.orderItems.length != 0) {
-                  order.orderItems.forEach(orderItem => {
-                    cloneOrderItem = JSON.parse(JSON.stringify(orderItem))
-                    cloneOrderItem.orderDate = order.orderDate
-                    initialOrderItems.push(cloneOrderItem)
-                  });
-                }
-              });
-              console.log(initialOrderItems)
-              setOrderItems(initialOrderItems)
+                totalQuantity = 0
+                order.orderItems.forEach(orderItem => {
+                  totalQuantity += orderItem.quantity
+                });
+                order.totalQuantity = totalQuantity
+              })
+              setOrders(data)
             })
             .catch(error => console.log('get all orders api fail ', error));
         })
@@ -76,13 +72,14 @@ const Account = ({ navigation, route }) => {
   const [email, setEmail] = useState("tushar@gmail.com")
   const [name, setName] = useState("tushar Bansal")
   const [role, setRole] = useState("ROLE_USER")
-  const [cartCount, setcartCount] = useState(0)
-  const [orderItems, setOrderItems] = useState([
+  const [cartCount, setcartCount] = useState()
+  const [orders, setOrders] = useState([
   ])
 
   cardPress = (index) => {
-    AsyncStorage.setItem('ProductFeatures', JSON.stringify(orderItems[index].product))
-      .then(() => navigation.navigate('Product'))
+    console.log(orders[index])
+    AsyncStorage.setItem('orderDetails', JSON.stringify(orders[index].orderItems))
+      .then(() => navigation.navigate('OrderDetails'))
       .catch(error =>
         console.log('orderCardPress AsyncStorage error', error),
       );
@@ -111,10 +108,10 @@ const Account = ({ navigation, route }) => {
       </View>
       <ScrollView style={styles.container}>
         {
-          orderItems.map((item, index) => {
+          orders.map((order, index) => {
             return (
               <View key={index}  >
-                {item.product != null && <TouchableOpacity
+                <TouchableOpacity
                   onPress={() => cardPress(index)}
                   delayPressIn={75}
                   style={{
@@ -141,7 +138,7 @@ const Account = ({ navigation, route }) => {
                         width: 120,
                         height: 180,
                       }}
-                      source={{ uri: item.product.productImageURL }}></Image>
+                      source={require('../assets/icons8-delivered-40.png')}></Image>
                   </View>
                   <View
                     style={{
@@ -153,12 +150,12 @@ const Account = ({ navigation, route }) => {
                     }}>
                     <Text
                       style={{
-                        color: 'black',
+                        color: 'green',
                         textTransform: 'uppercase',
                         fontSize: 20,
                         fontWeight: '500',
                       }}>
-                      {item.product.productName}
+                      COMPLETED
                     </Text>
                     <Text
                       style={{
@@ -167,7 +164,7 @@ const Account = ({ navigation, route }) => {
                         fontSize: 15,
                         paddingTop: 10,
                       }}>
-                      At:  <Text style={{ textTransform: 'lowercase' }}>{item.orderDate}</Text>
+                      At:  <Text style={{ textTransform: 'lowercase' }}>{order.orderDate}</Text>
                     </Text>
                     <Text
                       style={{
@@ -176,7 +173,7 @@ const Account = ({ navigation, route }) => {
                         fontSize: 15,
                         paddingTop: 10,
                       }}>
-                      Qnty:  <Text style={{ textTransform: 'lowercase' }}>{item.quantity}</Text>
+                      Qnty:  <Text style={{ textTransform: 'lowercase' }}>{order.totalQuantity}</Text>
                     </Text>
                     <Text
                       style={{
@@ -187,10 +184,10 @@ const Account = ({ navigation, route }) => {
                       }}>
                       Total: <Text style={{
                         fontWeight: '800', fontSize: 25,
-                      }}>$ {item.total}</Text>
+                      }}>$ {order.total}</Text>
                     </Text>
                   </View>
-                </TouchableOpacity>}
+                </TouchableOpacity>
               </View>
             )
           })
