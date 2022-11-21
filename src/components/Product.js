@@ -18,6 +18,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import {IP } from './AndroidIP'
+
 import ProductHeader from './ProductHeader';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -47,10 +49,10 @@ const Product = ({ navigation, route }) => {
                 .then(data => {
                   if (data != undefined) {
                     data = JSON.parse(data);
-                    console.log(data);
+                    console.log(data.userId);
                     setUserId(data.userId);
                     fetch(
-                      'http://10.0.2.2:8085/cartItem/p/' +
+                      'http://' + IP + ':8085/cartItem/p/' +
                       data.userId +
                       '/' +
                       result.productId,
@@ -59,9 +61,9 @@ const Product = ({ navigation, route }) => {
                         method: 'GET',
                       },
                     )
-                      .then(recieved => recieved.json())
+                      .then(recieved => {console.log(recieved); return recieved.json()})
                       .then(recieved => {
-                        console.log(product);
+                        console.log(recieved);
                         if (recieved.length != 0 && result.productQuantity >= recieved[0].cartItemQuantity) {
                           console.log("recieved", recieved)
                           setProductStatus('Incart');
@@ -72,9 +74,12 @@ const Product = ({ navigation, route }) => {
                             .catch(error =>
                               console.log('product set cartCount AsyncStorage error', error),
                             );
-                          fetch('http://10.0.2.2:8085/cartItem/c/' + recieved[0].cartItemId, {
+                          fetch(`http://${IP}:8085/cartItem/c/` + recieved[0].cartItemId, {
                             method: 'DELETE',
                           })
+                        }
+                        else {
+                          setProductStatus("Available")
                         }
                       })
                       .catch(error =>
@@ -83,17 +88,17 @@ const Product = ({ navigation, route }) => {
                   }
                 })
                 .catch(error =>
-                  console.log('Product user AsyncStorage  error'),
+                  console.log('Product cart api fail', error),
                 );
             }
           }
         })
-        .catch(error => console.log('Product AsyncStorage  error'));
+        .catch(error => console.log('Product AsyncStorage', error));
     });
   }, []);
 
   const [userId, setUserId] = useState(0);
-  const [productStatus, setProductStatus] = useState('Available');
+  const [productStatus, setProductStatus] = useState();
   const [cartCount, setcartCount] = useState(0);
 
 
@@ -115,7 +120,7 @@ const Product = ({ navigation, route }) => {
 
   addToCart = () => {
     //api call
-    fetch('http://10.0.2.2:8085/cartItem', {
+    fetch(`http://${IP}:8085/cartItem`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -222,7 +227,7 @@ const Product = ({ navigation, route }) => {
           <Text style={{ color: 'black', fontSize: 20, fontWeight: '450' }}>
             Highlights
           </Text>
-          {product.productDescription != undefined && product.productDescription.split(',').map(feature => {
+          {product.productDescription != undefined && product.productDescription.split('#').map(feature => {
             return (
               <View
                 key={feature}

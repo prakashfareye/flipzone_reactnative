@@ -24,6 +24,8 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {RadioButton} from 'react-native-paper';
 
+import { IP } from './AndroidIP'
+
 import {ProjectColors} from './colors/ProjectColors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -108,7 +110,7 @@ const RegisterUser = ({route, navigation}) => {
 
   const loginUser = () => {
     console.log(email, password);
-    fetch('http://10.0.2.2:8085/login', {
+    fetch(`http://${IP}:8085/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -140,7 +142,7 @@ const RegisterUser = ({route, navigation}) => {
       }),
     );
 
-    fetch('http://10.0.2.2:8085/user', {
+    fetch(`http://${IP}:8085/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -156,27 +158,12 @@ const RegisterUser = ({route, navigation}) => {
       .then(res => {
         console.log(res);
         saveUserToAsyncStorage(res);
-        fetch('http://10.0.2.2:8085/address', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pinCode: '',
-            description: '',
-            userId: res.userId,
-          }),
-        })
-          .then(response => response.json())
-          .then(addressRes => {
-            if (res.role === 'ROLE_USER') {
-              console.log('Checking Role', res.role);
-              navigation.navigate('Home');
-            } else {
-              navigation.navigate('My Listing');
-            }
-          })
-          .catch(error => console.log('address create api fail', error));
+        if (res.role === 'ROLE_USER') {
+          console.log('Checking Role', res.role);
+          navigation.navigate('Home');
+        } else {
+          navigation.navigate('My Listing');
+        }
       })
       .catch(error => console.log('fetchToken error: ', error));
   };

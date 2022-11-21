@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import { IP } from './AndroidIP'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProjectColors} from './colors/ProjectColors';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -94,7 +95,10 @@ const AddProduct = ({route, navigation}) => {
         productQuantity: productQuantity,
         brand: brand,
       };
-      fetch('http://10.0.2.2:8085/product', {
+      console.log(data)
+      if(userId==null || categoryId==null || productName=='' || productDescription=='' 
+      || productPrice=='' || productImageURL=='' || productQuantity==null){ alert("invalid details");}else{
+      fetch(`http://${IP}:8085/product`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +108,7 @@ const AddProduct = ({route, navigation}) => {
         console.log(response.status, response.ok);
         alert('saved');
       });
-    } catch (error) {
+    }} catch (error) {
       alert(error);
     }
     setCategoryId();
@@ -261,10 +265,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonNew: {
-    fontSize: 15,
+    fontSize: 12,
     padding: 10,
-    width: 70,
-    height: 60,
+    width: 100,
+    height: 50,
     maxHeight: 70,
     color: 'white',
     fontWeight: 'bold',

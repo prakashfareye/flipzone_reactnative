@@ -19,6 +19,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import { IP } from './AndroidIP'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RotateInDownLeft } from 'react-native-reanimated';
 
@@ -30,7 +32,7 @@ const Transaction = ({ route, navigation }) => {
           userResult = JSON.parse(userResult);
           console.log('Before Address ..........', userResult);
           if (userResult != undefined) {
-            fetch('http://10.0.2.2:8085/address/u/' + userResult.userId, {
+            fetch(`http://${IP}:8085/address/u/` + userResult.userId, {
               method: 'GET',
             })
               .then(response => response.json())
@@ -57,36 +59,6 @@ const Transaction = ({ route, navigation }) => {
   const [EditAddress, setEditAddress] = useState();
   const [addingAddress, setAddingAddress] = useState()
   const [addressList, setAddressList] = useState([
-    {
-      "address_id": 4,
-      "pinCode": "321001",
-      "description": "fareye",
-      "userId": 13
-    },
-    {
-      "address_id": 4,
-      "pinCode": "321001",
-      "description": "fareye",
-      "userId": 13
-    },
-    {
-      "address_id": 4,
-      "pinCode": "321001",
-      "description": "fareye",
-      "userId": 13
-    },
-    {
-      "address_id": 4,
-      "pinCode": "321001",
-      "description": "fareye",
-      "userId": 13
-    },
-    {
-      "address_id": 4,
-      "pinCode": "321001",
-      "description": "fareye",
-      "userId": 13
-    }
   ])
 
   function goToHome() {
@@ -94,6 +66,7 @@ const Transaction = ({ route, navigation }) => {
   }
 
   const handleSubmit = () => {
+
     if (addresssSelected == undefined) {
       alert("Please select address");
 
@@ -139,7 +112,7 @@ const Transaction = ({ route, navigation }) => {
                     addressId: addressList[addresssSelected].address_id
                   };
                   console.log(payload);
-                  fetch('http://10.0.2.2:8085/order', {
+                  fetch(`http://${IP}:8085/order`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -201,7 +174,7 @@ const Transaction = ({ route, navigation }) => {
                           total: total,
                           addressId: addressList[addresssSelected].address_id
                         };
-                        fetch('http://10.0.2.2:8085/order', {
+                        fetch(`http://${IP}:8085/order`, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
@@ -213,7 +186,7 @@ const Transaction = ({ route, navigation }) => {
                             console.log('order placed');
                             console.log(res);
 
-                            fetch('http://10.0.2.2:8085/cartItem/u/' + userId, {
+                            fetch(`http://${IP}:8085/cartItem/u/` + userId, {
                               method: 'DELETE',
                             })
                               .then(response => {
@@ -282,12 +255,9 @@ const Transaction = ({ route, navigation }) => {
       setAddressList(updatedAddressList)
       setAddingAddress()
       setEditAddress()
-    } else if (index == addresssSelected) {
-      setAddresssSelected()
-
-
     } else {
-      fetch('http://10.0.2.2:8085/address/' + addressList[index].address_id, {
+
+      fetch(`http://${IP}:8085/address/` + addressList[index].address_id, {
         method: 'DELETE',
       }).then(response => {
         console.log(response);
@@ -305,7 +275,7 @@ const Transaction = ({ route, navigation }) => {
         if (index == addresssSelected) {
           setAddresssSelected()
         } else if (addresssSelected != undefined && index < addresssSelected) {
-          updatedaddresssSelected = addresssSelected - 1
+          updatedAddresssSelected = addresssSelected - 1
           setAddresssSelected(updatedAddresssSelected)
         }
       });
@@ -319,7 +289,7 @@ const Transaction = ({ route, navigation }) => {
       console.log("mil gaya")
       alert("Please provide valid entries for address");
     } else if (addingAddress == index) {
-      fetch('http://10.0.2.2:8085/address', {
+      fetch(`http://${IP}:8085/address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -346,7 +316,7 @@ const Transaction = ({ route, navigation }) => {
         .catch(error => console.log('address create api fail', error));
     }
     else {
-      fetch('http://10.0.2.2:8085/address/' + addressList[index].address_id, {
+      fetch(`http://${IP}:8085/address/` + addressList[index].address_id, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -440,6 +410,7 @@ const Transaction = ({ route, navigation }) => {
           style={styles.textInputEmail}
           placeholder="CVV"
           placeholderTextColor={ProjectColors.grey}
+          secureTextEntry={true}
           onChangeText={text => {
             setCvv(text);
           }}
@@ -451,8 +422,8 @@ const Transaction = ({ route, navigation }) => {
       <TouchableOpacity
         onPress={addAddress}
         style={{
-          backgroundColor: ProjectColors.navy, height: 40,
-          width: 100,
+          backgroundColor: ProjectColors.navy, height: 60,
+          width: 125,
           justifyContent: 'center',
           alignSelf: 'center',
           marginTop: 30
@@ -464,7 +435,7 @@ const Transaction = ({ route, navigation }) => {
         {
           addressList.map((address, index) => {
             return (
-              <View key={index} style={{ marginHorizontal: 45, marginTop: 5, flexDirection: "column", padding: 10, justifyContent: "space-evenly", elevation: 3, backgroundColor: addresssSelected == index ? ProjectColors.mint : "white" }}>
+              <View key={index} style={{ marginHorizontal: 20, marginTop: 2.5, marginBottom: 2.5, flexDirection: "column", padding: 10, justifyContent: "space-evenly", elevation: 3, backgroundColor: addresssSelected == index ? ProjectColors.mint : "white" }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                   <Text style={{ fontWeight: 'bold', alignSelf: "center" }}>Description</Text>
                   <TextInput
@@ -554,7 +525,7 @@ const Transaction = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   button: {
     height: 30,
-    width: 75,
+    width: 80,
     justifyContent: 'center',
   },
   buttonText: {
@@ -585,7 +556,7 @@ const styles = StyleSheet.create({
   addressInput: {
 
     width: 200,
-    height: 35,
+    height: 40,
     borderWidth: 1,
     alignSelf: "center",
     borderColor: ProjectColors.grey,

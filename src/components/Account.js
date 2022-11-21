@@ -18,6 +18,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import { IP } from './AndroidIP'
+
 import Footer from './Footer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,24 +42,20 @@ const Account = ({ navigation, route }) => {
           setEmail(res.userEmailId)
           setName(res.userName)
           setRole(res.role)
-          fetch('http://10.0.2.2:8085/order/u/' + res.userId, {
+          fetch(`http://${IP}:8085/order/u/` + res.userId, {
             method: 'GET',
           })
             .then(response => response.json())
             .then(data => {
               console.log(data)
-              let initialOrderItems = []
               data.forEach(order => {
-                if (order.orderItems.length != 0) {
-                  order.orderItems.forEach(orderItem => {
-                    cloneOrderItem = JSON.parse(JSON.stringify(orderItem))
-                    cloneOrderItem.orderDate = order.orderDate
-                    initialOrderItems.push(cloneOrderItem)
-                  });
-                }
-              });
-              console.log(initialOrderItems)
-              setOrderItems(initialOrderItems)
+                totalQuantity = 0
+                order.orderItems.forEach(orderItem => {
+                  totalQuantity += orderItem.quantity
+                });
+                order.totalQuantity = totalQuantity
+              })
+              setOrders(data)
             })
             .catch(error => console.log('get all orders api fail ', error));
         })
@@ -74,13 +72,14 @@ const Account = ({ navigation, route }) => {
   const [email, setEmail] = useState("tushar@gmail.com")
   const [name, setName] = useState("tushar Bansal")
   const [role, setRole] = useState("ROLE_USER")
-  const [cartCount, setcartCount] = useState(0)
-  const [orderItems, setOrderItems] = useState([
+  const [cartCount, setcartCount] = useState()
+  const [orders, setOrders] = useState([
   ])
 
   cardPress = (index) => {
-    AsyncStorage.setItem('ProductFeatures', JSON.stringify(orderItems[index].product))
-      .then(() => navigation.navigate('Product'))
+    console.log(orders[index])
+    AsyncStorage.setItem('orderDetails', JSON.stringify(orders[index].orderItems))
+      .then(() => navigation.navigate('OrderDetails'))
       .catch(error =>
         console.log('orderCardPress AsyncStorage error', error),
       );
@@ -107,12 +106,13 @@ const Account = ({ navigation, route }) => {
           </View>
         </View>
       </View>
+      <Text style={{alignSelf: "center", fontWeight: '800', marginTop: 20, color: ProjectColors.navy, fontSize: 20}}>My Orders</Text>
       <ScrollView style={styles.container}>
         {
-          orderItems.map((item, index) => {
+          orders.map((order, index) => {
             return (
               <View key={index}  >
-                {item.product != null && <TouchableOpacity
+                <TouchableOpacity
                   onPress={() => cardPress(index)}
                   delayPressIn={75}
                   style={{
@@ -139,7 +139,7 @@ const Account = ({ navigation, route }) => {
                         width: 120,
                         height: 180,
                       }}
-                      source={{ uri: item.product.productImageURL }}></Image>
+                      source={require('../assets/ProjectColors.png')}></Image>
                   </View>
                   <View
                     style={{
@@ -151,12 +151,12 @@ const Account = ({ navigation, route }) => {
                     }}>
                     <Text
                       style={{
-                        color: 'black',
+                        color: 'green',
                         textTransform: 'uppercase',
                         fontSize: 20,
                         fontWeight: '500',
                       }}>
-                      {item.product.productName}
+                      COMPLETED
                     </Text>
                     <Text
                       style={{
@@ -165,7 +165,7 @@ const Account = ({ navigation, route }) => {
                         fontSize: 15,
                         paddingTop: 10,
                       }}>
-                      At:  <Text style={{ textTransform: 'lowercase' }}>{item.orderDate}</Text>
+                      At:  <Text style={{ textTransform: 'lowercase' }}>{order.orderDate}</Text>
                     </Text>
                     <Text
                       style={{
@@ -174,7 +174,7 @@ const Account = ({ navigation, route }) => {
                         fontSize: 15,
                         paddingTop: 10,
                       }}>
-                      Qnty:  <Text style={{ textTransform: 'lowercase' }}>{item.quantity}</Text>
+                      Qnty:  <Text style={{ textTransform: 'lowercase' }}>{order.totalQuantity}</Text>
                     </Text>
                     <Text
                       style={{
@@ -185,16 +185,16 @@ const Account = ({ navigation, route }) => {
                       }}>
                       Total: <Text style={{
                         fontWeight: '800', fontSize: 25,
-                      }}>$ {item.total}</Text>
+                      }}>$ {order.total}</Text>
                     </Text>
                   </View>
-                </TouchableOpacity>}
+                </TouchableOpacity>
               </View>
             )
           })
         }
       </ScrollView>
-      <TouchableOpacity onPress={logOutPress} style={[styles.userButton, { backgroundColor: ProjectColors.navy }]}>
+      <TouchableOpacity onPress={logOutPress} style={[styles.userButton, { backgroundColor: "red" }]}>
         <Text style={styles.userButtonText}>LOG OUT</Text>
       </TouchableOpacity>
       <Footer cartCount={cartCount} productHeaderNavigation={navigation} currentScreen="Account"></Footer>

@@ -20,6 +20,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import {IP } from './AndroidIP'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';
@@ -32,7 +34,7 @@ const Cart = ({ navigation, route }) => {
         .then(result => {
           result = JSON.parse(result);
           console.log(result.userId);
-          fetch('http://10.0.2.2:8085/cartItem/u/' + result.userId, {
+          fetch(`http://${IP}:8085/cartItem/u/` + result.userId, {
             method: 'GET',
           })
             .then(response => response.json())
@@ -48,7 +50,7 @@ const Cart = ({ navigation, route }) => {
                   initialTotalItems += element.cartItemQuantity;
                 } else {
                   console.log(data)
-                  fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
+                  fetch(`http://${IP}:8085/cartItem/c/` + element.cartItemId, {
                     method: 'DELETE',
                   }).then(response => console.log(response))
                 }
@@ -98,7 +100,7 @@ const Cart = ({ navigation, route }) => {
       removeCartItem(index);
     } else {
       fetch(
-        'http://10.0.2.2:8085/cartItem/decrease/' + cartItems[index].cartItemId,
+        `http://${IP}:8085/cartItem/decrease/` + cartItems[index].cartItemId,
         {
           method: 'PUT',
         },
@@ -129,7 +131,7 @@ const Cart = ({ navigation, route }) => {
       cartItems[index].product.productQuantity
     ) {
       fetch(
-        'http://10.0.2.2:8085/cartItem/increase/' + cartItems[index].cartItemId,
+        `http://${IP}:8085/cartItem/increase/` + cartItems[index].cartItemId,
         {
           method: 'PUT',
         },
@@ -157,7 +159,7 @@ const Cart = ({ navigation, route }) => {
     console.log('remove cart item');
     console.log(cartItems[index]);
     // api call
-    fetch('http://10.0.2.2:8085/cartItem/c/' + cartItems[index].cartItemId, {
+    fetch(`http://${IP}:8085/cartItem/c/` + cartItems[index].cartItemId, {
       method: 'DELETE',
     }).then(response => {
       console.log(response);

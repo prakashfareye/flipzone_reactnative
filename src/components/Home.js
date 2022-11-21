@@ -18,6 +18,8 @@ import {
 
 import { ProjectColors } from './colors/ProjectColors';
 
+import { IP } from './AndroidIP'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Footer from './Footer';
@@ -36,7 +38,7 @@ const Home = ({ navigation, route }) => {
             setcartCount(parseInt(result))
           } else {
             console.log("not in async storage")
-            fetch('http://10.0.2.2:8085/cartItem/u/' + result.userId, {
+            fetch(`http://${IP}:8085/cartItem/u/` + result.userId, {
               method: 'GET',
             })
               .then(response => response.json())
@@ -47,7 +49,7 @@ const Home = ({ navigation, route }) => {
                     initialTotalItems += element.cartItemQuantity;
                   } else {
                     console.log(data)
-                    fetch('http://10.0.2.2:8085/cartItem/c/' + element.cartItemId, {
+                    fetch(`http://${IP}:8085/cartItem/c/` + element.cartItemId, {
                       method: 'DELETE',
                     }).then(response => console.log(response))
                   }
@@ -68,7 +70,7 @@ const Home = ({ navigation, route }) => {
       })
       .catch(error => console.log('Product AsyncStorage  error'));
 
-    fetch('http://10.0.2.2:8085/category', {
+    fetch(`http://${IP}:8085/category`, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -77,7 +79,7 @@ const Home = ({ navigation, route }) => {
       })
       .catch(error => console.log('get all categories api fail ', error));
 
-    fetch('http://10.0.2.2:8085/product', {
+    fetch(`http://${IP}:8085/product`, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -101,20 +103,8 @@ const Home = ({ navigation, route }) => {
 
   const [cartCount, setcartCount] = useState(0);
 
-  const [productCategories, setProductCategories] = useState([
-    {
-      productCategoryId: 1,
-      productCategoryName: 'shoes',
-      productCategoryImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-    },
-    {
-      productCategoryId: 2,
-      productCategoryName: 'shoes111',
-      productCategoryImageURL:
-        'https://www.freepnglogos.com/uploads/shoes-png/dance-shoes-png-transparent-dance-shoes-images-5.png',
-    },
-  ]);
+  const [productCategories, setProductCategories] = useState([])
+
 
   const searchBarPress = () => {
     AsyncStorage.setItem('searchText', '')

@@ -10,6 +10,7 @@ import {
   Keyboard,
   TextInput,
 } from 'react-native';
+import { IP } from "./AndroidIP"
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -31,9 +32,10 @@ const Listing = ({route, navigation}) => {
           if (result != undefined) {
             result = JSON.parse(result);
             setUser(result);
-            fetch(`http://10.0.2.2:8085/product/u/${result.userId}`)
+            fetch(`http://${IP}:8085/product/u/${result.userId}`)
               .then(response => response.json())
               .then(responseJson => {
+                console.log(responseJson)
                 setFilterData(responseJson);
                 setList(responseJson);
               })
@@ -56,7 +58,7 @@ const Listing = ({route, navigation}) => {
         // We have data!!
         //setUser(JSON.parse(value));
         console.log(JSON.parse(value));
-        fetch(`http://10.0.2.2:8085/product/u/${user.userId}`)
+        fetch(`http://${IP}:8085/product/u/${user.userId}`)
           .then(response => response.json())
           .then(responseJson => {
             setFilterData(responseJson);
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: '#2874F0',
     borderRadius: 10,
-    marginTop: 20,
+    marginTop: 5,
     textAlign: 'center',
     color: 'white',
   },
