@@ -107,6 +107,10 @@ const App = () => {
           component={Listing}
           options={({ navigation }) => ({
             headerBackVisible: false,
+            headerStyle: {
+              backgroundColor: 'royalblue',
+            },
+            headerTintColor:'white',
             headerRight: () => (
               <View>
                 <TouchableOpacity
@@ -116,7 +120,7 @@ const App = () => {
                   }}>
                   <Text
                     style={{
-                      color: 'black',
+                      color: 'white',
                       fontWeight: 'bold',
                       textDecorationLine: 'underline',
                     }}>
@@ -127,7 +131,10 @@ const App = () => {
             ),
           })}
         />
-        <Stack.Screen name="Add Product" component={AddProduct} />
+        <Stack.Screen name="Add Product" component={AddProduct} options={{headerStyle: {
+            backgroundColor: 'royalblue',
+          },
+          headerTintColor:'white'}}/>
         <Stack.Screen name="Upload Image" component={ImageUpload} />
       </Stack.Navigator>
     </NavigationContainer>
