@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: '#2874F0',
     borderRadius: 10,
-    marginTop: 20,
+    marginTop: 5,
     textAlign: 'center',
     color: 'white',
   },

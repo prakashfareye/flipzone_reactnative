@@ -106,6 +106,7 @@ const Account = ({ navigation, route }) => {
           </View>
         </View>
       </View>
+      <Text style={{alignSelf: "center", fontWeight: '800', marginTop: 20, color: ProjectColors.navy, fontSize: 20}}>My Orders</Text>
       <ScrollView style={styles.container}>
         {
           orders.map((order, index) => {
@@ -138,7 +139,7 @@ const Account = ({ navigation, route }) => {
                         width: 120,
                         height: 180,
                       }}
-                      source={require('../assets/icons8-delivered-40.png')}></Image>
+                      source={require('../assets/ProjectColors.png')}></Image>
                   </View>
                   <View
                     style={{

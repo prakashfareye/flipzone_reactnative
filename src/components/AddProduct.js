@@ -265,10 +265,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonNew: {
-    fontSize: 15,
+    fontSize: 12,
     padding: 10,
-    width: 70,
-    height: 60,
+    width: 100,
+    height: 50,
     maxHeight: 70,
     color: 'white',
     fontWeight: 'bold',

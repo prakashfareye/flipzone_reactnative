@@ -29,6 +29,8 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {ProjectColors} from './components/colors/ProjectColors';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -132,7 +134,7 @@ const App = () => {
           })}
         />
         <Stack.Screen name="Add Product" component={AddProduct} options={{headerStyle: {
-            backgroundColor: 'royalblue',
+            backgroundColor: ProjectColors.navy,
           },
           headerTintColor:'white'}}/>
         <Stack.Screen name="Upload Image" component={ImageUpload} />
