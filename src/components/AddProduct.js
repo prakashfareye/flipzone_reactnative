@@ -38,7 +38,6 @@ const AddProduct = ({route, navigation}) => {
   const [productPrice, setProductPrice] = useState();
   const [categoryId, setCategoryId] = useState();
   const [brand, setBrand] = useState('');
-  //let userId = 1;
   const [productImageURL, setProductImageURL] = useState('');
   const [productQuantity, setProductQuantity] = useState();
 
@@ -138,7 +137,7 @@ const AddProduct = ({route, navigation}) => {
               value={productName}
               onChangeText={input => {
                 setProductName(input);
-                // setProductName(data.name);
+              
               }}
             />
           </View>
@@ -150,7 +149,7 @@ const AddProduct = ({route, navigation}) => {
               value={productDescription}
               onChangeText={input => {
                 setProductDescription(input);
-                // setProductDescription(data.description);
+               
               }}
               multiline
             />
@@ -163,7 +162,7 @@ const AddProduct = ({route, navigation}) => {
               value={brand}
               onChangeText={input => {
                 setBrand(input);
-                // setProductDescription(data.description);
+             
               }}
             />
           </View>
@@ -176,7 +175,7 @@ const AddProduct = ({route, navigation}) => {
               value={productPrice}
               onChangeText={input => {
                 setProductPrice(input);
-                // setProductPrice(data.price);
+              
               }}
             />
           </View>
@@ -188,9 +187,9 @@ const AddProduct = ({route, navigation}) => {
               value={productImageURL}
               onChangeText={input => {
                 setProductImageURL(input);
-                // setProductName(data.name);
+             
               }}
-              multiline
+              
             />
             <TouchableOpacity
               style={styles.buttonNew}
@@ -209,13 +208,13 @@ const AddProduct = ({route, navigation}) => {
               keyboardType="numbers-and-punctuation"
               onChangeText={input => {
                 setProductQuantity(input);
-                // setProductName(data.name);
+           
               }}
             />
           </View>
 
           <View style={styles.dropdownContainer}>
-            {/* {renderLabel()} */}
+      
             <Dropdown
               style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
@@ -340,7 +339,6 @@ const styles = StyleSheet.create({
   itemView: {
     backgroundColor: 'white',
     flexDirection: 'column',
-    // justifyContent: 'space-between',
   },
   dropdownContainer: {
     backgroundColor: 'white',
