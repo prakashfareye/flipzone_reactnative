@@ -91,7 +91,7 @@ const OrderDetails = ({ navigation, route }) => {
                                     onPress={() => cardPress(index)}
                                     delayPressIn={75}
                                     style={{
-                                        height: 225,
+                                        height: 250,
                                         width: 375,
                                         backgroundColor: ProjectColors.white,
                                         marginBottom: 10,
