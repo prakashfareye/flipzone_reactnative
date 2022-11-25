@@ -96,7 +96,7 @@ const RegisterUser = ({route, navigation}) => {
       else{alert("Invalid Credentials");}
     } else {
       // login
-      if (emailValidError === '' && password.length >= 8 && confirmPassword==password) {
+      if (emailValidError === '' && password.length >= 8 ) {
         // verify user
         loginUser();
       }
