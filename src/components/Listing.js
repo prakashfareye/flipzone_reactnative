@@ -17,13 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Listing = ({route, navigation}) => {
   const [sortToggle, setSortToggle] = useState(true);
   const [list, setList] = useState([]);
-  const [filterby, setFilterBy] = useState('');
   const [filterData, setFilterData] = useState([]);
   const [user, setUser] = useState({});
 
-  //   useEffect(() => {
-  //     getUserDetailFromAsyncSrorage();
-  //   });
+ 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -51,28 +48,7 @@ const Listing = ({route, navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
-  const getUserDetailFromAsyncSrorage = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user');
-      if (value !== null) {
-        // We have data!!
-        //setUser(JSON.parse(value));
-        console.log(JSON.parse(value));
-        fetch(`http://${IP}:8085/product/u/${user.userId}`)
-          .then(response => response.json())
-          .then(responseJson => {
-            setFilterData(responseJson);
-            setList(responseJson);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.log('from AS Todos fetching Saved user ERROR!');
-    }
-  };
+
 
   const FilterHandler = text => {
     setFilterData(
@@ -82,7 +58,6 @@ const Listing = ({route, navigation}) => {
         return itemdata.indexOf(textData) > -1;
       }),
     );
-    setFilterBy(text);
   };
 
   const sortHandler=()=>{
@@ -105,39 +80,34 @@ const Listing = ({route, navigation}) => {
         </View>
 
         <View style={styles.textInput}>
+          <View style={{flexDirection:'row'}}>
           <TextInput
             style={styles.input}
             placeholder={'Search by product name'}
-            value={filterby}
+         
             onChangeText={input => {
-              setFilterBy(input);
+              FilterHandler(input);
             }}
           />
-          <TouchableOpacity
-            onPress={() => {
-              // setList(list.filter(data => data.productName == filterby));
-              //       setFilterBy('');
-              FilterHandler(filterby);
-            }}>
             <Image
               style={styles.image}
               source={require('../assets/search.png')}
             />
-          </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             onPress={
              sortHandler
             }>
             <Image
-              style={[styles.image,{height:30,width:30}]}
+              style={[styles.image,{height:30,width:30,right:20}]}
               source={require('../assets/sort.png')}
             />
           </TouchableOpacity>
         </View>
         <View style={styles.flatListContainer}>
           <FlatList
-            data={filterby ? filterData : list}
+            data={filterData }
             renderItem={({item}) => (
               <View style={styles.listContainer}>
                 <View style={styles.listItem}>
@@ -220,10 +190,12 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 10,
     paddingLeft: 10,
+    
   },
   textInput: {
     flexDirection: 'row',
     marginTop: 30,
+    
   },
 
   image: {
