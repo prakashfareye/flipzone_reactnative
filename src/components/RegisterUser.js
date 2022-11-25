@@ -43,12 +43,14 @@ const RegisterUser = ({route, navigation}) => {
   };
 
   const [seePassword, setSeePassword] = useState(true);
+  const [seeCP,setSeeCP]=useState(true);
   const [signInMode, setSignInMode] = useState(true);
 
   // user states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword,setConfirmPassword]=useState('');
   const [emailValidError, setEmailValidError] = useState('');
   const [checked, setChecked] = React.useState('ROLE_USER');
 
@@ -89,12 +91,12 @@ const RegisterUser = ({route, navigation}) => {
     if (signInMode) {
       //sign up
       
-      if (emailValidError === '' && password.length >= 8) {
+      if (emailValidError === '' && password.length >= 8 && confirmPassword==password) {
       signUpUser();}
       else{alert("Invalid Credentials");}
     } else {
       // login
-      if (emailValidError === '' && password.length >= 8) {
+      if (emailValidError === '' && password.length >= 8 && confirmPassword==password) {
         // verify user
         loginUser();
       }
@@ -205,7 +207,7 @@ const RegisterUser = ({route, navigation}) => {
             />
             <View style={styles.passwordView}>
               <TextInput
-                label="Passwordd"
+                label="Password"
                 secureTextEntry={seePassword}
                 placeholder="Password"
                 value={password}
@@ -231,18 +233,19 @@ const RegisterUser = ({route, navigation}) => {
             {signInMode && (
               <View style={styles.passwordView}>
                 <TextInput
-                  label="Confirm Passwordd"
-                  secureTextEntry={seePassword}
+                  label="Confirm Password"
+                  secureTextEntry={seeCP}
+                  value={confirmPassword}
                   placeholder="Confirm Password"
                   placeholderTextColor={ProjectColors.grey}
                   style={styles.textInputPassword}
                   onChangeText={text => {
-                    //setPassword(text);
+                    setConfirmPassword(text);
                   }}
                 />
                 <TouchableOpacity
                   style={styles.wrapperIcon}
-                  onPress={() => setSeePassword(!seePassword)}>
+                  onPress={() => setSeeCP(!seeCP)}>
                   <Image
                     source={
                       seePassword
